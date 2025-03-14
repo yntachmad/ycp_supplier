@@ -21,6 +21,8 @@ class CityResource extends Resource
 
     protected static ?string $navigationGroup = 'System Management';
 
+    protected static ?int $sort = 2;
+
     public static function form(Form $form): Form
     {
         return $form
