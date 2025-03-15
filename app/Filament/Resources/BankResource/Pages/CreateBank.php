@@ -9,4 +9,6 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateBank extends CreateRecord
 {
     protected static string $resource = BankResource::class;
+
+    protected static ?string $title = "Register";
 }

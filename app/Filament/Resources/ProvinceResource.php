@@ -2,26 +2,32 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ProvinceResource\Pages;
-use App\Filament\Resources\ProvinceResource\RelationManagers;
-use App\Models\Province;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Province;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Infolists\Infolist;
+use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Infolists\Components\TextEntry;
+use App\Filament\Resources\ProvinceResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\ProvinceResource\RelationManagers;
 
 class ProvinceResource extends Resource
 {
     protected static ?string $model = Province::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-map-pin';
+
+    protected static ?string $navigationLabel = 'Provinces';
+    protected static ?string $modelLabel = 'Provinces';
+    protected static ?string $slug = 'provinces';
+
 
     protected static ?string $navigationGroup = 'System Management';
-
-    protected static ?int $sort = 1;
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
@@ -39,21 +45,21 @@ class ProvinceResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('province')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                // Tables\Columns\TextColumn::make('deleted_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: true),
+                // Tables\Columns\TextColumn::make('created_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: true),
+                // Tables\Columns\TextColumn::make('updated_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                // Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -79,10 +85,18 @@ class ProvinceResource extends Resource
     {
         return [
             'index' => Pages\ListProvinces::route('/'),
-            'create' => Pages\CreateProvince::route('/create'),
-            'view' => Pages\ViewProvince::route('/{record}'),
-            'edit' => Pages\EditProvince::route('/{record}/edit'),
+            // 'create' => Pages\CreateProvince::route('/create'),
+            // 'view' => Pages\ViewProvince::route('/{record}'),
+            // 'edit' => Pages\EditProvince::route('/{record}/edit'),
         ];
+    }
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                TextEntry::make('province')->label('Province Name'),
+
+            ]);
     }
 
     public static function getEloquentQuery(): Builder

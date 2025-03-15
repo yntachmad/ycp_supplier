@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Classification extends Model
 {
     use SoftDeletes;
+
+    protected $guarded = [];
 }

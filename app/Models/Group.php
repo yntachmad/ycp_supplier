@@ -9,4 +9,6 @@ class Group extends Model
 {
     use SoftDeletes;
 
+    protected $guarded = [];
+
 }
