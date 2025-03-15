@@ -25,6 +25,7 @@ class PublicPanelProvider extends PanelProvider
         return $panel
             ->id('public')
             ->path('public')
+            // ->login()
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -35,8 +36,8 @@ class PublicPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Public/Widgets'), for: 'App\\Filament\\Public\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                // Widgets\AccountWidget::class,
+                // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -48,9 +49,9 @@ class PublicPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-            ])
-            ->authMiddleware([
-                Authenticate::class,
             ]);
+        // ->authMiddleware([
+        //     Authenticate::class,
+        // ]);
     }
 }

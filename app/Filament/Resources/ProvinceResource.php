@@ -21,6 +21,8 @@ class ProvinceResource extends Resource
 
     protected static ?string $navigationGroup = 'System Management';
 
+    protected static ?int $sort = 1;
+
     public static function form(Form $form): Form
     {
         return $form
