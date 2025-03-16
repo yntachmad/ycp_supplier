@@ -28,6 +28,11 @@ class CategoryResource extends Resource
     protected static ?string $navigationGroup = 'System Management';
     protected static ?int $navigationSort = 5;
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
     public static function form(Form $form): Form
     {
         return $form
