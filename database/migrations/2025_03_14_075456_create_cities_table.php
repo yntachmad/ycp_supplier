@@ -15,6 +15,8 @@ return new class extends Migration {
             $table->foreignId('province_id')->nullable()->constrained('provinces')->onDelete('set null');
             $table->string('city');
             $table->softDeletes();
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }

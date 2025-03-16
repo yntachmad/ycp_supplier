@@ -15,6 +15,8 @@ return new class extends Migration {
             $table->string('group_name');
             $table->text('group_description');
             $table->softDeletes();
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }

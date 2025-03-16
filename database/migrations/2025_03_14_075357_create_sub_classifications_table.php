@@ -15,6 +15,8 @@ return new class extends Migration {
             $table->foreignId('classification_id')->nullable()->constrained('classifications')->onDelete('set null');
             $table->string('subclassification_name');
             $table->softDeletes();
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }

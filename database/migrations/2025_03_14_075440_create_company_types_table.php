@@ -16,6 +16,8 @@ return new class extends Migration {
             $table->text('Information')->nullable();
             $table->text('legal_documents')->nullable();
             $table->softDeletes();
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }

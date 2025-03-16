@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,16 +15,26 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
     use SoftDeletes;
 
+    // public static function boot()
+    // {
+    //     parent::boot();
+    //     static::creating(function ($model) {
+    //         $user = Auth::user();
+    //         $model->created_by = $user->id;
+    //         $model->updated_by = $user->id;
+    //     });
+    //     static::updating(function ($model) {
+    //         $user = Auth::user();
+    //         $model->updated_by = $user->id;
+    //     });
+    // }
+
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.

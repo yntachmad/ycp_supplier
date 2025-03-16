@@ -31,6 +31,8 @@ return new class extends Migration {
             $table->enum('Terms_condition', ['no', 'yes']);
             $table->foreignId('typebank_id')->nullable()->constrained('banks')->onDelete('set null');
             $table->softDeletes();
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }
