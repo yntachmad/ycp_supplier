@@ -26,6 +26,11 @@ class ClassificationResource extends Resource
     protected static ?string $navigationLabel = 'Services';
     protected static ?string $modelLabel = 'Services';
     protected static ?string $slug = 'services';
+    protected static ?string $label = 'services';
+
+    protected ?string $subheading = 'This is the subheading.';
+
+    // protected static ?string $recordTitleAttribute = 'null';
 
 
     protected static ?string $navigationGroup = 'System Management';

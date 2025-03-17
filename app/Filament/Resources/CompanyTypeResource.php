@@ -23,7 +23,7 @@ class CompanyTypeResource extends Resource
 
     protected static ?string $navigationLabel = 'Type of Company';
     protected static ?string $modelLabel = 'Type of Company';
-    protected static ?string $slug = 'type-of-Company';
+    protected static ?string $slug = 'type-of-company';
 
 
     protected static ?string $navigationGroup = 'System Management';
@@ -56,10 +56,10 @@ class CompanyTypeResource extends Resource
                     ->label('Type of Company')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('Information')
-                    ->limit(70)
+                    ->wrap()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('legal_documents')
-
+                    ->wrap()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 // Tables\Columns\TextColumn::make('created_at')
@@ -75,7 +75,7 @@ class CompanyTypeResource extends Resource
                 // Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                // Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

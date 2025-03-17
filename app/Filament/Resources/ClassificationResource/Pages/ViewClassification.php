@@ -16,4 +16,9 @@ class ViewClassification extends ViewRecord
             Actions\EditAction::make(),
         ];
     }
+
+    public function getTitle(): string
+    {
+        return "Editing " . $this->record->name; // Assuming $this->record contains the resource data
+    }
 }

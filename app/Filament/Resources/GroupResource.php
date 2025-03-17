@@ -53,7 +53,7 @@ class GroupResource extends Resource
                 Tables\Columns\TextColumn::make('group_name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('group_description')
-                    ->limit(70)
+                    ->wrap()
                     ->searchable(),
                 // Tables\Columns\TextColumn::make('deleted_at')
                 //     ->dateTime()
@@ -72,7 +72,7 @@ class GroupResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                // Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

@@ -52,7 +52,7 @@ class CategoryResource extends Resource
                 Tables\Columns\TextColumn::make('category_name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('category_description')
-                    ->limit(70)
+                    ->wrap()
                     ->searchable(),
                 // Tables\Columns\TextColumn::make('deleted_at')
                 //     ->dateTime()
@@ -71,7 +71,7 @@ class CategoryResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                // Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

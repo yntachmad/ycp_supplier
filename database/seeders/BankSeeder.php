@@ -14,21 +14,21 @@ class BankSeeder extends Seeder
     public function run(): void
     {
         DB::table('banks')->insert([
-            'bankType' => 'No Information',
+            'bank_type' => 'No Information',
             'created_at' => now(),
             'updated_at' => now(),
             'created_by' => 1,
             'updated_by' => 1,
         ]);
         DB::table('banks')->insert([
-            'bankType' => 'Commercial',
+            'bank_type' => 'Commercial',
             'created_at' => now(),
             'updated_at' => now(),
             'created_by' => 1,
             'updated_by' => 1,
         ]);
         DB::table('banks')->insert([
-            'bankType' => 'Personal',
+            'bank_type' => 'Personal',
             'created_at' => now(),
             'updated_at' => now(),
             'created_by' => 1,
