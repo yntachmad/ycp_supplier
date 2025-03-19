@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Bank;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Vendor extends Model
 {
@@ -41,7 +42,7 @@ class Vendor extends Model
     {
         return $this->belongsTo(Classification::class);
     }
-    public function SubClassification(): BelongsTo
+    public function Subclassification(): BelongsTo
     {
         return $this->belongsTo(SubClassification::class);
     }
@@ -58,7 +59,7 @@ class Vendor extends Model
     {
         return $this->belongsTo(City::class);
     }
-    public function typebank(): BelongsTo
+    public function bank(): BelongsTo
     {
         return $this->belongsTo(Bank::class);
     }

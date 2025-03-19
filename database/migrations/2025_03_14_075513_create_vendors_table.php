@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->foreignId('group_id')->nullable()->constrained('groups')->onDelete('set null');
             $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
             $table->foreignId('classification_id')->nullable()->constrained('classifications')->onDelete('set null');
-            $table->foreignId('subClassification_id')->nullable()->constrained('sub_classifications')->onDelete('set null');
+            $table->foreignId('subclassification_id')->nullable()->constrained('sub_classifications')->onDelete('set null');
             $table->text('description');
             $table->foreignId('type_company_id')->nullable()->constrained('company_types')->onDelete('set null');
             $table->string('supplier_name')->nullable();
@@ -31,7 +31,7 @@ return new class extends Migration {
             // $table->enum('Terms_condition', ['no', 'yes'])->nullable();
             $table->integer('tax_register')->nullable();
             $table->integer('Terms_condition')->nullable();
-            $table->foreignId('type_bank_id')->nullable()->constrained('banks')->onDelete('set null');
+            $table->foreignId('bank_id')->nullable()->constrained('banks')->onDelete('set null');
             $table->softDeletes();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
