@@ -29,7 +29,10 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogo(asset('images/logo-ycp.png'))
             ->brandLogoHeight('2.8rem')
             ->favicon(asset('images/favicon.ico'))
-            ->sidebarCollapsibleOnDesktop(false)
+            ->sidebarCollapsibleOnDesktop(true)
+            // ->sidebarFullyCollapsibleOnDesktop()
+            ->databaseNotifications()
+
             ->login()
             ->colors([
                 'primary' => Color::Amber,
