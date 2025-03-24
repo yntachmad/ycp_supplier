@@ -30,6 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogoHeight('2.8rem')
             ->favicon(asset('images/favicon.ico'))
             ->sidebarCollapsibleOnDesktop(true)
+            ->collapsibleNavigationGroups(true)
             // ->sidebarFullyCollapsibleOnDesktop()
             ->databaseNotifications()
 

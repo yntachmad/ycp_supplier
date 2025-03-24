@@ -75,7 +75,7 @@ class VendorResource extends Resource
     {
         return $form
             ->schema([
-                \Filament\Forms\Components\Section::make()
+                \Filament\Forms\Components\Card::make()
                     // ->description('Prevent abuse by limiting the number of requests per period')
                     ->schema([
                         \Filament\Forms\Components\Select::make('classification_id')
@@ -87,6 +87,7 @@ class VendorResource extends Resource
                             ->preload()
                             ->required()
                             ->live()
+                            ->inlineLabel()
                             ->label('Services'),
 
                         \Filament\Forms\Components\Select::make('subclassification_id')
@@ -94,6 +95,7 @@ class VendorResource extends Resource
                             ->options(fn(Get $get): Collection => SubClassification::query()->where('classification_id', $get('classification_id'))->pluck('subclassification_name', 'id'))
                             ->searchable()
                             ->preload()
+                            ->inlineLabel()
                             ->live()
                             // ->required()
                             ->label('Sub Services'),
@@ -101,20 +103,23 @@ class VendorResource extends Resource
                             ->relationship(name: 'Category', titleAttribute: 'category_name')
                             ->searchable()
                             ->preload()
+                            ->inlineLabel()
                             ->required()
                             ->label('Category'),
                         \Filament\Forms\Components\Select::make('group_id')
                             ->relationship(name: 'group', titleAttribute: 'group_name')
                             ->searchable()
                             ->preload()
+                            ->inlineLabel()
                             ->required()
                             ->label('Group'),
 
                     ])->columns(2),
-                \Filament\Forms\Components\Section::make('Vendor Profile')
+                \Filament\Forms\Components\Card::make()
                     // ->description('Add Information details')
                     ->schema([
                         Forms\Components\TextInput::make('supplier_name')
+                            ->label('Vendor Name')
                             ->required()
                             ->maxLength(255),
                         \Filament\Forms\Components\Select::make('type_company_id')
@@ -123,9 +128,6 @@ class VendorResource extends Resource
                             ->preload()
                             ->required()
                             ->label('Type of Company'),
-
-
-
 
                         \Filament\Forms\Components\Group::make()
                             ->schema([
@@ -202,6 +204,14 @@ class VendorResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->striped()
+            // ->openRecordUrlInNewTab()
+            // ->deferLoading()
+            // ->heading('Clients')
+            // ->paginated(false)
+            ->paginated([25, 50, 100, 200, 500, 'all'])
+            // ->defaultPaginationPageOption(2)
+            ->extremePaginationLinks(25)
             ->columns([
                 Tables\Columns\TextColumn::make('classification.classification_name')
                     ->label('Services')
@@ -213,14 +223,16 @@ class VendorResource extends Resource
                 Tables\Columns\TextColumn::make('supplier_name')
                     ->label('Vendor Name')
                     ->weight(FontWeight::Bold)
-                    ->description(fn(Vendor $record): string => $record->TypeCompany['companyType'])
+                    ->description(fn(Vendor $record): string => $record->category_id != null ? $record->category['category_name'] : '-')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('province.province')
                     ->description(fn(Vendor $record): string => $record->city['city'])
                     ->label('Location')
+                    ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('description')
+                    ->label('Description / Product')
                     ->wrap()
                     ->words(15)
                     ->searchable(),
@@ -253,8 +265,10 @@ class VendorResource extends Resource
                 // Tables\Columns\TextColumn::make('province.province')
                 //     ->sortable(),
                 Tables\Columns\TextColumn::make('city.city')
+                    ->searchable()
                     ->hidden()
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('legal_document')
                     ->hidden()
                     ->searchable(),
@@ -266,11 +280,17 @@ class VendorResource extends Resource
 
                 Tables\Columns\TextColumn::make('bank.bank_type')->hidden(),
 
+                Tables\Columns\TextColumn::make('typeCompany.companyType')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Type of Company')
+                    ->searchable()
+                    ->sortable(),
 
-                Tables\Columns\TextColumn::make('category.category_name')
-                    // ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+
+                // Tables\Columns\TextColumn::make('category.category_name')
+                //     // ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: true),
                 // Tables\Columns\TextColumn::make('created_at')
                 //     ->dateTime()
                 //     ->sortable()
@@ -286,12 +306,41 @@ class VendorResource extends Resource
             // ])
             ->filters([
 
-                Tables\Filters\TrashedFilter::make(),
+                // Tables\Filters\TrashedFilter::make(),
+
                 SelectFilter::make('type_company_id')
+                    ->label('Type of Company')
                     ->multiple()
                     ->searchable()
                     ->preload()
                     ->relationship(name: 'TypeCompany', titleAttribute: 'companyType'),
+
+                SelectFilter::make('Category_id')
+                    ->label('Category')
+                    ->multiple()
+                    ->searchable()
+                    ->preload()
+                    ->relationship(name: 'category', titleAttribute: 'category_name'),
+
+                SelectFilter::make('province_id')
+                    ->label('Provinces')
+                    // ->multiple()
+                    ->searchable()
+                    ->preload()
+                    // ->live()
+                    // ->afterStateUpdated(function (Set $set) {
+                    //     $set('city_id', null);
+                    // })
+                    ->relationship(name: 'province', titleAttribute: 'province'),
+
+                // SelectFilter::make('city_id')
+                //     ->label('city')
+                //     ->options(fn(Get $get): Collection => City::query()->where('province_id', $get('province_id'))->pluck('city', 'id'))
+                //     ->multiple()
+                //     // ->live()
+                //     ->searchable()
+                //     ->preload(),
+                // // ->relationship(name: 'city', titleAttribute: 'city'),
 
             ])
             ->actions([
