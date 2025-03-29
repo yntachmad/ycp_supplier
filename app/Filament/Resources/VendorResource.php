@@ -54,6 +54,11 @@ class VendorResource extends Resource
     protected static ?string $model = Vendor::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $modelLabel = 'Vendors';
+
+    protected static ?string $label = "test title";
+
+
 
     // protected static ?string $recordTitleAttribute = 'Test';
 
@@ -70,6 +75,11 @@ class VendorResource extends Resource
 
 
     protected static ?string $navigationBadgeTooltip = 'The number of Vendors';
+
+    public static function getTitle(): string
+    {
+        return 'Supplier Information';
+    }
 
     public static function form(Form $form): Form
     {
@@ -115,37 +125,35 @@ class VendorResource extends Resource
                             ->label('Group'),
 
                     ])->columns(2),
-                \Filament\Forms\Components\Card::make()
+                \Filament\Forms\Components\Card::make('Vendor Profile')
                     // ->description('Add Information details')
                     ->schema([
-                        Forms\Components\TextInput::make('supplier_name')
-                            ->label('Vendor Name')
-                            ->required()
-                            ->maxLength(255),
-                        \Filament\Forms\Components\Select::make('type_company_id')
-                            ->relationship(name: 'TypeCompany', titleAttribute: 'companyType')
-                            ->searchable()
-                            ->preload()
-                            ->required()
-                            ->label('Type of Company'),
-
                         \Filament\Forms\Components\Group::make()
                             ->schema([
-                                Forms\Components\TextInput::make('contact_person')
+                                Forms\Components\TextInput::make('supplier_name')
+                                    ->label('Vendor Name')
+
                                     ->required()
                                     ->maxLength(255),
-                                Forms\Components\TextInput::make('contact_phone')
-                                    ->tel()
+                                \Filament\Forms\Components\Select::make('type_company_id')
+                                    ->relationship(name: 'TypeCompany', titleAttribute: 'companyType')
+                                    ->searchable()
+                                    ->preload()
                                     ->required()
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('contact_email')
-                                    ->email()
-                                    ->maxLength(255),
-                            ])->columns(3)->columnSpanFull(),
+                                    ->label('Type of Company'),
+                            ])->columns(2)->columnSpanFull(),
                         Forms\Components\Textarea::make('description')
                             ->label('Description / Product ')
                             ->required()
                             ->columnSpanFull(),
+                        Forms\Components\TextInput::make('contact_person')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('contact_phone')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('contact_email')
+                            ->maxLength(255),
                         Forms\Components\Textarea::make('address')
                             ->required()
                             ->columnSpanFull(),
@@ -174,12 +182,12 @@ class VendorResource extends Resource
 
                         \Filament\Forms\Components\Group::make()
                             ->schema([
-                                Checkbox::make('tax_register'),
+                                Checkbox::make('tax_register')->label('is Tax Register ?'),
                                 // Forms\Components\TextInput::make('tax_register')
                                 //     ->required(),
                                 // \Filament\Forms\Components\Toggle::make('Terms_condition'),
                                 Checkbox::make('Terms_condition'),
-                            ])->columns(2),
+                            ])->columns(1),
                         \Filament\Forms\Components\CheckboxList::make('legal_document')
                             ->options([
                                 'ID Card' => 'ID Card',
@@ -209,9 +217,9 @@ class VendorResource extends Resource
             // ->deferLoading()
             // ->heading('Clients')
             // ->paginated(false)
-            ->paginated([25, 50, 100, 200, 500, 'all'])
+            // ->paginated([5, 25, 50, 100, 200, 500, 'all'])
             // ->defaultPaginationPageOption(2)
-            ->extremePaginationLinks(25)
+            // ->extremePaginationLinks(5)
             ->columns([
                 Tables\Columns\TextColumn::make('classification.classification_name')
                     ->label('Services')
@@ -222,6 +230,8 @@ class VendorResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('supplier_name')
                     ->label('Vendor Name')
+                    // ->wrap()
+                    ->words(3)
                     ->weight(FontWeight::Bold)
                     ->description(fn(Vendor $record): string => $record->category_id != null ? $record->category['category_name'] : '-')
                     ->searchable(),
@@ -245,11 +255,9 @@ class VendorResource extends Resource
                 Tables\Columns\TextColumn::make('category.category_name')
                     ->hidden()
                     ->sortable(),
-
                 Tables\Columns\TextColumn::make('Subclassification.subclassification_name')
                     ->hidden()
                     ->sortable(),
-
                 Tables\Columns\TextColumn::make('contact_person')
                     ->hidden()
                     ->searchable(),
@@ -286,6 +294,13 @@ class VendorResource extends Resource
                     ->searchable()
                     ->sortable(),
 
+                Tables\Columns\TextColumn::make('contact_person')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->description(fn(Vendor $record): string => $record->contact_phone)
+                    ->label('Contact')
+                    ->searchable()
+                    ->sortable(),
+
 
                 // Tables\Columns\TextColumn::make('category.category_name')
                 //     // ->dateTime()
@@ -307,6 +322,12 @@ class VendorResource extends Resource
             ->filters([
 
                 // Tables\Filters\TrashedFilter::make(),
+                SelectFilter::make('Category_id')
+                    ->label('Category')
+                    ->multiple()
+                    ->searchable()
+                    ->preload()
+                    ->relationship(name: 'category', titleAttribute: 'category_name'),
 
                 SelectFilter::make('type_company_id')
                     ->label('Type of Company')
@@ -315,12 +336,7 @@ class VendorResource extends Resource
                     ->preload()
                     ->relationship(name: 'TypeCompany', titleAttribute: 'companyType'),
 
-                SelectFilter::make('Category_id')
-                    ->label('Category')
-                    ->multiple()
-                    ->searchable()
-                    ->preload()
-                    ->relationship(name: 'category', titleAttribute: 'category_name'),
+
 
                 SelectFilter::make('province_id')
                     ->label('Provinces')
@@ -332,6 +348,16 @@ class VendorResource extends Resource
                     //     $set('city_id', null);
                     // })
                     ->relationship(name: 'province', titleAttribute: 'province'),
+                SelectFilter::make('city_id')
+                    ->label('City')
+                    // ->multiple()
+                    ->searchable()
+                    ->preload()
+                    // ->live()
+                    // ->afterStateUpdated(function (Set $set) {
+                    //     $set('city_id', null);
+                    // })
+                    ->relationship(name: 'city', titleAttribute: 'city'),
 
                 // SelectFilter::make('city_id')
                 //     ->label('city')
@@ -385,18 +411,34 @@ class VendorResource extends Resource
                 \Filament\Infolists\Components\Section::make()
                     // ->description('Prevent abuse by limiting the number of requests per period')
                     ->schema([
-                        \Filament\Infolists\Components\TextEntry::make('supplier_name'),
-                        \Filament\Infolists\Components\TextEntry::make('contact_person'),
-                        \Filament\Infolists\Components\TextEntry::make('contact_phone'),
-                    ])->columns(3),
-                \Filament\Infolists\Components\Section::make('Rate limiting')
-                    ->description('Prevent abuse by limiting the number of requests per period')
+                        \Filament\Infolists\Components\TextEntry::make('classification.classification_name')
+                            ->label('Service')
+                            ->inlineLabel(),
+                        \Filament\Infolists\Components\TextEntry::make('Subclassification.subclassification_name')->label('Sub Service')->inlineLabel(),
+                        \Filament\Infolists\Components\TextEntry::make('category.category_name')->label('Category')->inlineLabel(),
+                        \Filament\Infolists\Components\TextEntry::make('group.group_name')->label('Group')->inlineLabel(),
+                    ])->columns(2),
+                \Filament\Infolists\Components\Section::make('Vendor Profile')
+                    // ->description('Prevent abuse by limiting the number of requests per period')
                     ->schema([
-                        \Filament\Infolists\Components\TextEntry::make('contact_email'),
-                        \Filament\Infolists\Components\TextEntry::make('contact_phone'),
-                        \Filament\Infolists\Components\TextEntry::make('supplier_name'),
-                        \Filament\Infolists\Components\TextEntry::make('typeCompany.companyType'),
-                    ]),
+                        \Filament\Infolists\Components\TextEntry::make('supplier_name')->label('Vendor Name')
+                            ->inlineLabel(),
+                        \Filament\Infolists\Components\TextEntry::make('typeCompany.companyType')->label('Type of Company')
+                            ->inlineLabel(),
+                        \Filament\Infolists\Components\TextEntry::make('description')->label('Description / Product ')->columnSpanFull(),
+
+                        \Filament\Infolists\Components\Group::make()->schema([
+                            \Filament\Infolists\Components\TextEntry::make('contact_person'),
+                            \Filament\Infolists\Components\TextEntry::make('contact_phone'),
+                            \Filament\Infolists\Components\TextEntry::make('contact_email'),
+                        ])->columns(3)->columnSpanFull(),
+                        \Filament\Infolists\Components\TextEntry::make('address')->label('Address')->columnSpanFull(),
+
+
+                        \Filament\Infolists\Components\TextEntry::make('province.province'),
+                        \Filament\Infolists\Components\TextEntry::make('city.city'),
+                        \Filament\Infolists\Components\TextEntry::make('legal_document'),
+                    ])->columns(2),
 
             ]);
     }

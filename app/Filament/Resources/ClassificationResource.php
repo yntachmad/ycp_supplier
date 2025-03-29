@@ -36,10 +36,10 @@ class ClassificationResource extends Resource
     protected static ?string $navigationGroup = 'System Management';
     protected static ?int $navigationSort = 1;
 
-    public static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::count();
-    }
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     return static::getModel()::count();
+    // }
 
 
 
