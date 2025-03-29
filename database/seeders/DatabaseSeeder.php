@@ -19,9 +19,14 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'admin',
             'email' => 'admin@test.com',
+<<<<<<< HEAD
             'username' => 'administrator',
             'role' => 'admin',
+=======
+            'username' => 'admin',
+>>>>>>> 85af11072f2a8cad545bf6d75264c5e36a0ccf87
             'password' => Hash::make('123456'),
+            'role' => 'admin',
         ]);
 
         $this->call([
@@ -31,6 +36,9 @@ class DatabaseSeeder extends Seeder
             CompanyTypeSeeder::class,
             GroupSeeder::class,
             SubClassificationSeeder::class,
+            ProvinceSeeder::class,
+            CitySeeder::class,
+
         ]);
     }
 }
