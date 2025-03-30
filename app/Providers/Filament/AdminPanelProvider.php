@@ -33,17 +33,18 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogo(asset('images/logo-ycp.png'))
             ->brandLogoHeight('2.6rem')
             ->favicon(asset('images/favicon.ico'))
-            ->sidebarCollapsibleOnDesktop(true)
-            ->collapsibleNavigationGroups(true)
-            ->navigationGroups([
-                NavigationGroup::make()
-                    ->label('User Management')
-                    ->icon('heroicon-o-user'),
-                NavigationGroup::make()
-                    ->label('System Management')
-                    ->icon('heroicon-o-arrow-down-on-square-stack')
-                    ->collapsed(),
-            ])
+            ->topNavigation()
+            // ->sidebarCollapsibleOnDesktop(true)
+            // ->collapsibleNavigationGroups(true)
+            // ->navigationGroups([
+            //     NavigationGroup::make()
+            //         ->label('User Management')
+            //         ->icon('heroicon-o-user'),
+            //     NavigationGroup::make()
+            //         ->label('System Management')
+            //         ->icon('heroicon-o-arrow-down-on-square-stack')
+            //         ->collapsed(),
+            // ])
 
             // ->sidebarFullyCollapsibleOnDesktop()
             ->databaseNotifications()
