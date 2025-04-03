@@ -28,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->breadcrumbs(false)
             // ->brandLogo(fn() => view('/filament.logo.logo'))
             // ->brandLogoHeight('2rem')
             ->brandLogo(asset('images/logo-ycp.png'))
