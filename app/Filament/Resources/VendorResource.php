@@ -5,14 +5,14 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use App\Models\Bank;
 use App\Models\City;
-use Filament\Forms\Components\Group;
 use Filament\Tables;
 use App\Models\Vendor;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Forms\Form;
-
 use Filament\Tables\Table;
+
+use App\Models\Classification;
 
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
@@ -21,9 +21,10 @@ use App\Models\SubClassification;
 
 use Illuminate\Support\Collection;
 use Filament\Tables\Actions\Action;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Radio;
-use Filament\Forms\Components\Toggle;
 // use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Toggle;
 use Filament\Support\Enums\ActionSize;
 use Filament\Support\Enums\FontWeight;
 use Filament\Forms\Components\Checkbox;
@@ -35,8 +36,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\Split;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\ToggleColumn;
-use Filament\Tables\Filters\SelectFilter;
 
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Infolists\Components\Fieldset;
@@ -98,6 +99,12 @@ class VendorResource extends Resource
                             ->required()
                             ->live()
                             ->inlineLabel()
+                            ->createOptionForm([
+                                Forms\Components\TextInput::make('classification_name')
+                                    ->label('Service Name')
+                                    ->required(),
+
+                            ])
                             // ->extraAttributes([
                             //     'class' => 'block w-full p-1 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
 
@@ -107,6 +114,18 @@ class VendorResource extends Resource
                         \Filament\Forms\Components\Select::make('subclassification_id')
                             // ->relationship(name: 'subClassification', titleAttribute: 'subclassification_name')
                             ->options(fn(Get $get): Collection => SubClassification::query()->where('classification_id', $get('classification_id'))->pluck('subclassification_name', 'id'))
+                            ->createOptionForm([
+                                \Filament\Forms\Components\Select::make('classification_id')
+                                    // ->relationship(name: 'classification', titleAttribute: 'classification_name')
+                                    ->options(Classification::all()->pluck('classification_name', 'id'))
+                                    ->label('Services Name')
+                                    ->searchable()
+                                    ->preload()
+                                    ->required(),
+                                Forms\Components\TextInput::make('subclassification_name')
+                                    ->label('Sub Service Name')
+                                    ->required(),
+                            ])
                             ->searchable()
                             ->preload()
                             ->inlineLabel()
@@ -119,10 +138,20 @@ class VendorResource extends Resource
                             ->preload()
                             ->inlineLabel()
                             ->required()
+                            ->createOptionForm([
+                                Forms\Components\TextInput::make('category_name')
+                                    ->required(),
+
+                            ])
                             ->label('Category'),
                         \Filament\Forms\Components\Select::make('group_id')
                             ->relationship(name: 'group', titleAttribute: 'group_name')
                             ->searchable()
+                            ->createOptionForm([
+                                Forms\Components\TextInput::make('group_name')
+                                    ->required(),
+
+                            ])
                             ->preload()
                             ->inlineLabel()
                             ->required()
@@ -136,12 +165,18 @@ class VendorResource extends Resource
                             ->schema([
                                 Forms\Components\TextInput::make('supplier_name')
                                     ->label('Vendor Name')
-
                                     ->required()
                                     ->maxLength(255),
                                 \Filament\Forms\Components\Select::make('type_company_id')
                                     ->relationship(name: 'TypeCompany', titleAttribute: 'companyType')
                                     ->searchable()
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('name')
+                                            ->required(),
+                                        Forms\Components\TextInput::make('email')
+                                            ->required()
+                                            ->email(),
+                                    ])
                                     ->preload()
                                     ->required()
                                     ->label('Type of Company'),
