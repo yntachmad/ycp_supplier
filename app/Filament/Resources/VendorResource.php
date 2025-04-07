@@ -86,6 +86,7 @@ class VendorResource extends Resource
     {
         return $form
             ->schema([
+
                 \Filament\Forms\Components\Card::make()
                     // ->description('Prevent abuse by limiting the number of requests per period')
                     ->schema([
@@ -450,7 +451,7 @@ class VendorResource extends Resource
                     Tables\Actions\RestoreBulkAction::make(),
 
                 ]),
-                ExportBulkAction::make()
+                \Filament\Tables\Actions\ExportBulkAction::make()
                     ->exporter(VendorExporter::class)
                     ->formats([
                         ExportFormat::Xlsx,
@@ -466,50 +467,74 @@ class VendorResource extends Resource
                     // ->description('Prevent abuse by limiting the number of requests per period')
                     ->schema([
                         \Filament\Infolists\Components\TextEntry::make('classification.classification_name')
+                            ->weight(FontWeight::SemiBold)
                             ->label('Service')
                             ->inlineLabel(),
-                        \Filament\Infolists\Components\TextEntry::make('Subclassification.subclassification_name')->label('Sub Service')->inlineLabel(),
-                        \Filament\Infolists\Components\TextEntry::make('category.category_name')->label('Category')->inlineLabel(),
-                        \Filament\Infolists\Components\TextEntry::make('group.group_name')->label('Group')->inlineLabel(),
+                        \Filament\Infolists\Components\TextEntry::make('Subclassification.subclassification_name')
+                            ->label('Sub Service')
+                            ->weight(FontWeight::SemiBold)
+                            ->inlineLabel(),
+                        \Filament\Infolists\Components\TextEntry::make('category.category_name')->weight(FontWeight::SemiBold)
+                            ->label('Category')->inlineLabel(),
+                        \Filament\Infolists\Components\TextEntry::make('group.group_name')->label('Group')->weight(FontWeight::SemiBold)
+                            ->inlineLabel(),
                     ])->columns(2),
                 \Filament\Infolists\Components\Section::make('Vendor Profile')
                     // ->description('Prevent abuse by limiting the number of requests per period')
                     ->schema([
-                        \Filament\Infolists\Components\TextEntry::make('supplier_name')->label('Vendor Name')
+                        \Filament\Infolists\Components\TextEntry::make('supplier_name')
+                            ->label('Vendor Name')
+                            ->weight(FontWeight::SemiBold)
                             ->inlineLabel(),
                         \Filament\Infolists\Components\TextEntry::make('typeCompany.companyType')->label('Type of Company')
+                            ->weight(FontWeight::SemiBold)
                             ->inlineLabel(),
-                        \Filament\Infolists\Components\TextEntry::make('description')->label('Description / Product ')->columnSpanFull(),
+                        \Filament\Infolists\Components\TextEntry::make('description')
+                            ->label('Description / Product ')
+                            ->weight(FontWeight::SemiBold)
+                            ->columnSpanFull(),
 
                         \Filament\Infolists\Components\Group::make()->schema([
-                            \Filament\Infolists\Components\TextEntry::make('contact_person'),
-                            \Filament\Infolists\Components\TextEntry::make('contact_phone'),
-                            \Filament\Infolists\Components\TextEntry::make('contact_email'),
+                            \Filament\Infolists\Components\TextEntry::make('contact_person')
+                                ->weight(FontWeight::SemiBold),
+                            \Filament\Infolists\Components\TextEntry::make('contact_phone')
+                                ->weight(FontWeight::SemiBold),
+                            \Filament\Infolists\Components\TextEntry::make('contact_email')
+                                ->weight(FontWeight::SemiBold),
                         ])->columns(3)->columnSpanFull(),
-                        \Filament\Infolists\Components\TextEntry::make('address')->label('Address')->columnSpanFull(),
+                        \Filament\Infolists\Components\TextEntry::make('address')
+                            ->weight(FontWeight::SemiBold)
+                            ->label('Address')
+                            ->columnSpanFull(),
                         \Filament\Infolists\Components\Group::make()->schema([
-                            \Filament\Infolists\Components\TextEntry::make('province.province'),
-                            \Filament\Infolists\Components\TextEntry::make('city.city'),
-                            \Filament\Infolists\Components\TextEntry::make('website'),
+                            \Filament\Infolists\Components\TextEntry::make('province.province')
+                                ->weight(FontWeight::SemiBold),
+                            \Filament\Infolists\Components\TextEntry::make('city.city')
+                                ->weight(FontWeight::SemiBold),
+                            \Filament\Infolists\Components\TextEntry::make('website')
+                                ->weight(FontWeight::SemiBold),
                         ])->columns(3)->columnSpanFull(),
-
-
-
                     ])->columns(2),
                 \Filament\Infolists\Components\Section::make('Other Information')
                     // ->description('Prevent abuse by limiting the number of requests per period')
                     ->schema([
-                        \Filament\Infolists\Components\TextEntry::make('legal_document')->listWithLineBreaks()
+                        \Filament\Infolists\Components\TextEntry::make('legal_document')
+                            // ->size(50)
+                            ->weight(FontWeight::SemiBold)
+                            ->listWithLineBreaks()
                             ->bulleted(),
-                        \Filament\Infolists\Components\TextEntry::make('bank.bank_type'),
-                        TextEntry::make('tax_register')
-                            ->badge()
-                            ->color(fn(string $state): string => match ($state) {
-                                '' => 'gray',
-                                '0' => 'warning',
-                                '1' => 'success',
-                                'rejected' => 'danger',
-                            })
+                        \Filament\Infolists\Components\TextEntry::make('bank.bank_type')->weight(FontWeight::SemiBold),
+
+                        \Filament\Infolists\Components\Group::make()->schema([
+                            \Filament\Infolists\Components\IconEntry::make('tax_register')
+                                // ->inlineLabel()
+                                ->boolean(),
+
+                            \Filament\Infolists\Components\IconEntry::make('Terms_condition')
+                                // ->inlineLabel()
+                                ->boolean()
+                        ])
+
                     ])->columns(3),
 
             ]);

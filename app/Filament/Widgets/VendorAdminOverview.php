@@ -16,7 +16,7 @@ class VendorAdminOverview extends BaseWidget
                 ->icon('heroicon-o-users')
                 ->url('/admin/vendors')
                 ->color('primary')
-                ->description('Total Vendors'),
+                ->description('Total of Vendors'),
             // ->descriptionIcon('heroicon-m-arrow-trending-up'),
             Stat::make('Works', Vendor::query()->where('category_id', 1)->count())
                 ->icon('heroicon-o-users')
