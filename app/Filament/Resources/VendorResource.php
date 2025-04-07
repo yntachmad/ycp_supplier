@@ -59,7 +59,7 @@ class VendorResource extends Resource
 
     protected static ?string $label = "test title";
 
-
+    protected static ?string $pluralLabel = 'Vendors';
 
     // protected static ?string $recordTitleAttribute = 'Test';
 
@@ -219,6 +219,17 @@ class VendorResource extends Resource
                         Forms\Components\TextInput::make('website')
                             ->maxLength(255),
 
+
+
+
+                        // ->bulkToggleable(),
+
+
+
+                    ])->columns(3),
+                \Filament\Forms\Components\Card::make('Other Information')
+                    // ->description('Add Information details')
+                    ->schema([
                         \Filament\Forms\Components\Group::make()
                             ->schema([
                                 Checkbox::make('tax_register')->label('is Tax Register ?'),
@@ -228,6 +239,7 @@ class VendorResource extends Resource
                                 Checkbox::make('Terms_condition'),
                             ])->columns(1),
                         \Filament\Forms\Components\CheckboxList::make('legal_document')
+                            ->label('Legal Documents')
                             ->options([
                                 'ID Card' => 'ID Card',
                                 'SIUP' => 'SIUP',
@@ -237,10 +249,7 @@ class VendorResource extends Resource
                                 'Akta Pendirian' => 'Akta Pendirian',
                                 'Akta Notaris' => 'Akta Notaris',
                                 'Bank Account' => 'Bank Account',
-                            ])
-                            ->columns(2),
-                        // ->bulkToggleable(),
-
+                            ])->columns(2),
                         \Filament\Forms\Components\Radio::make('bank_id')
                             ->options(fn(): Collection => Bank::query()->pluck('bank_type', 'id'))->label('Type of Account Bank'),
 
@@ -281,9 +290,9 @@ class VendorResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('description')
-                    ->label('Description / Product')
+                    ->label('Description / Products')
                     ->wrap()
-                    ->words(15)
+                    ->words(13)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('group.group_name')
                     ->hidden(),
@@ -361,6 +370,12 @@ class VendorResource extends Resource
             ->filters([
 
                 // Tables\Filters\TrashedFilter::make(),
+                SelectFilter::make('classification_id')
+                    ->label('Services')
+                    ->multiple()
+                    ->searchable()
+                    ->preload()
+                    ->relationship(name: 'classification', titleAttribute: 'classification_name'),
                 SelectFilter::make('Category_id')
                     ->label('Category')
                     ->multiple()
@@ -472,12 +487,30 @@ class VendorResource extends Resource
                             \Filament\Infolists\Components\TextEntry::make('contact_email'),
                         ])->columns(3)->columnSpanFull(),
                         \Filament\Infolists\Components\TextEntry::make('address')->label('Address')->columnSpanFull(),
+                        \Filament\Infolists\Components\Group::make()->schema([
+                            \Filament\Infolists\Components\TextEntry::make('province.province'),
+                            \Filament\Infolists\Components\TextEntry::make('city.city'),
+                            \Filament\Infolists\Components\TextEntry::make('website'),
+                        ])->columns(3)->columnSpanFull(),
 
 
-                        \Filament\Infolists\Components\TextEntry::make('province.province'),
-                        \Filament\Infolists\Components\TextEntry::make('city.city'),
-                        \Filament\Infolists\Components\TextEntry::make('legal_document'),
+
                     ])->columns(2),
+                \Filament\Infolists\Components\Section::make('Other Information')
+                    // ->description('Prevent abuse by limiting the number of requests per period')
+                    ->schema([
+                        \Filament\Infolists\Components\TextEntry::make('legal_document')->listWithLineBreaks()
+                            ->bulleted(),
+                        \Filament\Infolists\Components\TextEntry::make('bank.bank_type'),
+                        TextEntry::make('tax_register')
+                            ->badge()
+                            ->color(fn(string $state): string => match ($state) {
+                                '' => 'gray',
+                                '0' => 'warning',
+                                '1' => 'success',
+                                'rejected' => 'danger',
+                            })
+                    ])->columns(3),
 
             ]);
     }

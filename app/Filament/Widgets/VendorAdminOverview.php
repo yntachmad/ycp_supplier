@@ -15,26 +15,32 @@ class VendorAdminOverview extends BaseWidget
             Stat::make('Vendors', Vendor::query()->count())
                 ->icon('heroicon-o-users')
                 ->url('/admin/vendors')
-                ->description('Total Vendors'),
-                // ->descriptionIcon('heroicon-m-arrow-trending-up'),
-            Stat::make('Works', Vendor::query()->where('category_id', 1)->count())
-            ->icon('heroicon-o-users')
-                ->description('Works Category')
                 ->color('primary')
-                ->extraAttributes([
-                            'class' => 'cursor-pointer',
-                            // 'wire:click' => "\$dispatch('setStatusFilter', { filter: 'processed' })",
-                            'wire:click' => "goto()",
-                        ]),
-                // ->descriptionIcon('heroicon-m-arrow-trending-down'),
+                ->description('Total Vendors'),
+            // ->descriptionIcon('heroicon-m-arrow-trending-up'),
+            Stat::make('Works', Vendor::query()->where('category_id', 1)->count())
+                ->icon('heroicon-o-users')
+                ->description('Works Category')
+                ->url('/admin/vendors?tableFilters[Category_id][values][0]=1')
+                ->color('primary'),
+            // ->extraAttributes([
+            //             'class' => 'cursor-pointer',
+            //             // 'wire:click' => "\$dispatch('setStatusFilter', { filter: 'processed' })",
+            //             'wire:click' => "goto()",
+            //         ]),
+            // ->descriptionIcon('heroicon-m-arrow-trending-down'),
             Stat::make('Goods', Vendor::query()->where('category_id', 2)->count())
-            ->icon('heroicon-o-users')
-            ->description('Goods Category'),
-                // ->descriptionIcon('heroicon-m-arrow-trending-up'),
+                ->icon('heroicon-o-users')
+                ->url('admin/vendors?tableFilters[Category_id][values][0]=2')
+                ->color('primary')
+                ->description('Goods Category'),
+            // ->descriptionIcon('heroicon-m-arrow-trending-up'),
             Stat::make('Services', Vendor::query()->where('category_id', 3)->count())
-            ->icon('heroicon-o-users')
-            ->description('Services Category')
-                // ->descriptionIcon('heroicon-m-arrow-trending-up', IconPosition::After),
+                ->icon('heroicon-o-users')
+                ->url('admin/vendors?tableFilters[Category_id][values][0]=3')
+                ->color('primary')
+                ->description('Services Category')
+            // ->descriptionIcon('heroicon-m-arrow-trending-up', IconPosition::After),
             // Stat::make('Average time on page', '3:12')
             //     ->description('3% increase')
             //     ->descriptionIcon('heroicon-m-arrow-trending-up')

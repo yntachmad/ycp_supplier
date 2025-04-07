@@ -10,6 +10,8 @@ class CreateVendor extends CreateRecord
 {
     protected static string $resource = VendorResource::class;
 
+    // protected static ?string $title = 'Register New Vendor';
+
     protected function getRedirectUrl(): string
     {
         return static::getResource()::getUrl('index');

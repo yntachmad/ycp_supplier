@@ -23,6 +23,8 @@ class ClassificationResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-folder-open';
 
+    // protected static ?string $activeNavigationIcon = 'heroicon-o-folder-open';
+
     protected static ?string $navigationLabel = 'Services';
     protected static ?string $modelLabel = 'Services';
     protected static ?string $slug = 'services';

@@ -35,6 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogoHeight('2.6rem')
             ->favicon(asset('images/favicon.ico'))
             ->topNavigation()
+
             // ->sidebarCollapsibleOnDesktop(true)
             // ->collapsibleNavigationGroups(true)
             // ->navigationGroups([
@@ -57,7 +58,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
-                Pages\Dashboard::class,
+                // Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
@@ -78,5 +79,12 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
+    }
+
+    protected static ?string $title = 'Custom Page Title';
+
+    public function getHeaderWidgetsColumns(): int|array
+    {
+        return 3;
     }
 }
