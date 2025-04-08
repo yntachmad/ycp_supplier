@@ -15,13 +15,17 @@ class VendorExporter extends Exporter
     {
         return [
             // ExportColumn::make('id')->label('ID'),
-            ExportColumn::make('group.group_name')->label('Group'),
+
+            ExportColumn::make('classification.classification_name')->label('Services'),
+            ExportColumn::make('Subclassification.subclassification_name')->label('Sub Services'),
             ExportColumn::make('category.category_name')->label('Category'),
-            ExportColumn::make('classification.classification_name')->label('Classification'),
-            ExportColumn::make('subclassification_id'),
+            ExportColumn::make('group.group_name')->label('Group'),
+            ExportColumn::make('supplier_name')->label('Vendors Name'),
+            ExportColumn::make('typeCompany.companyType')->label('Type of Company'),
+
             // ExportColumn::make('description'),
-            // ExportColumn::make('typeCompany.id'),
-            // ExportColumn::make('supplier_name'),
+
+            //
             // ExportColumn::make('contact_person'),
             // ExportColumn::make('contact_phone'),
             // ExportColumn::make('contact_email'),
