@@ -35,13 +35,16 @@ use App\Filament\Exports\VendorExporter;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\Split;
 use Filament\Tables\Actions\ActionGroup;
-use Filament\Tables\Columns\ToggleColumn;
+use App\Filament\Exports\VendorsExporter;
 
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Infolists\Components\Section;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Infolists\Components\Fieldset;
 use Filament\Tables\Columns\CheckboxColumn;
+use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Tables\Actions\ExportBulkAction;
 use App\Filament\Resources\VendorResource\Pages;
@@ -87,10 +90,10 @@ class VendorResource extends Resource
         return $form
             ->schema([
 
-                \Filament\Forms\Components\Card::make()
+                Forms\Components\Card::make()
                     // ->description('Prevent abuse by limiting the number of requests per period')
                     ->schema([
-                        \Filament\Forms\Components\Select::make('classification_id')
+                        Forms\Components\Select::make('classification_id')
                             ->relationship(name: 'classification', titleAttribute: 'classification_name')
                             ->afterStateUpdated(function (Set $set) {
                                 $set('subClassification_id', null);
@@ -112,11 +115,11 @@ class VendorResource extends Resource
                             // ])
                             ->label('Services'),
 
-                        \Filament\Forms\Components\Select::make('subclassification_id')
+                        Forms\Components\Select::make('subclassification_id')
                             // ->relationship(name: 'subClassification', titleAttribute: 'subclassification_name')
                             ->options(fn(Get $get): Collection => SubClassification::query()->where('classification_id', $get('classification_id'))->pluck('subclassification_name', 'id'))
                             ->createOptionForm([
-                                \Filament\Forms\Components\Select::make('classification_id')
+                                Forms\Components\Select::make('classification_id')
                                     // ->relationship(name: 'classification', titleAttribute: 'classification_name')
                                     ->options(Classification::all()->pluck('classification_name', 'id'))
                                     ->label('Services Name')
@@ -133,7 +136,7 @@ class VendorResource extends Resource
                             ->live()
                             // ->required()
                             ->label('Sub Services'),
-                        \Filament\Forms\Components\Select::make('category_id')
+                        Forms\Components\Select::make('category_id')
                             ->relationship(name: 'Category', titleAttribute: 'category_name')
                             ->searchable()
                             ->preload()
@@ -145,7 +148,7 @@ class VendorResource extends Resource
 
                             ])
                             ->label('Category'),
-                        \Filament\Forms\Components\Select::make('group_id')
+                        Forms\Components\Select::make('group_id')
                             ->relationship(name: 'group', titleAttribute: 'group_name')
                             ->searchable()
                             ->createOptionForm([
@@ -159,10 +162,10 @@ class VendorResource extends Resource
                             ->label('Group'),
 
                     ])->columns(2),
-                \Filament\Forms\Components\Card::make('Vendor Profile')
+                Forms\Components\Card::make('Vendor Profile')
                     // ->description('Add Information details')
                     ->schema([
-                        \Filament\Forms\Components\Group::make()
+                        Forms\Components\Group::make()
                             ->schema([
                                 Forms\Components\TextInput::make('supplier_name')
                                     ->label('Vendor Name')
@@ -197,7 +200,7 @@ class VendorResource extends Resource
                         Forms\Components\Textarea::make('address')
                             ->required()
                             ->columnSpanFull(),
-                        \Filament\Forms\Components\Select::make('province_id')
+                        Forms\Components\Select::make('province_id')
                             ->relationship(name: 'province', titleAttribute: 'province')
                             ->afterStateUpdated(function (Set $set) {
                                 $set('city_id', null);
@@ -208,7 +211,7 @@ class VendorResource extends Resource
                             ->live()
                             ->label('Province'),
 
-                        \Filament\Forms\Components\Select::make('city_id')
+                        Forms\Components\Select::make('city_id')
                             // ->relationship(name: 'subClassification', titleAttribute: 'subclassification_name')
                             ->options(fn(Get $get): Collection => City::query()->where('province_id', $get('province_id'))->pluck('city', 'id'))
                             ->searchable()
@@ -231,7 +234,7 @@ class VendorResource extends Resource
                 \Filament\Forms\Components\Card::make('Other Information')
                     // ->description('Add Information details')
                     ->schema([
-                        \Filament\Forms\Components\Group::make()
+                        Forms\Components\Group::make()
                             ->schema([
                                 Checkbox::make('tax_register')->label('is Tax Register ?'),
                                 // Forms\Components\TextInput::make('tax_register')
@@ -239,7 +242,7 @@ class VendorResource extends Resource
                                 // \Filament\Forms\Components\Toggle::make('Terms_condition'),
                                 Checkbox::make('Terms_condition'),
                             ])->columns(1),
-                        \Filament\Forms\Components\CheckboxList::make('legal_document')
+                        Forms\Components\CheckboxList::make('legal_document')
                             ->label('Legal Documents')
                             ->options([
                                 'ID Card' => 'ID Card',
@@ -251,7 +254,7 @@ class VendorResource extends Resource
                                 'Akta Notaris' => 'Akta Notaris',
                                 'Bank Account' => 'Bank Account',
                             ])->columns(2),
-                        \Filament\Forms\Components\Radio::make('bank_id')
+                        Forms\Components\Radio::make('bank_id')
                             ->options(fn(): Collection => Bank::query()->pluck('bank_type', 'id'))->label('Type of Account Bank'),
 
                     ])->columns(3),
@@ -451,8 +454,10 @@ class VendorResource extends Resource
                     Tables\Actions\RestoreBulkAction::make(),
 
                 ]),
-                \Filament\Tables\Actions\ExportBulkAction::make()
+                Tables\Actions\ExportBulkAction::make()
                     ->exporter(VendorExporter::class)
+                    ->modalHeading('Export Vendors')
+                    ->columnMapping(false)
                     ->formats([
                         ExportFormat::Xlsx,
                     ])
@@ -466,71 +471,71 @@ class VendorResource extends Resource
                 \Filament\Infolists\Components\Section::make()
                     // ->description('Prevent abuse by limiting the number of requests per period')
                     ->schema([
-                        \Filament\Infolists\Components\TextEntry::make('classification.classification_name')
+                        TextEntry::make('classification.classification_name')
                             ->weight(FontWeight::SemiBold)
                             ->label('Service')
                             ->inlineLabel(),
-                        \Filament\Infolists\Components\TextEntry::make('Subclassification.subclassification_name')
+                        TextEntry::make('Subclassification.subclassification_name')
                             ->label('Sub Service')
                             ->weight(FontWeight::SemiBold)
                             ->inlineLabel(),
-                        \Filament\Infolists\Components\TextEntry::make('category.category_name')->weight(FontWeight::SemiBold)
+                        TextEntry::make('category.category_name')->weight(FontWeight::SemiBold)
                             ->label('Category')->inlineLabel(),
-                        \Filament\Infolists\Components\TextEntry::make('group.group_name')->label('Group')->weight(FontWeight::SemiBold)
+                        TextEntry::make('group.group_name')->label('Group')->weight(FontWeight::SemiBold)
                             ->inlineLabel(),
                     ])->columns(2),
                 \Filament\Infolists\Components\Section::make('Vendor Profile')
                     // ->description('Prevent abuse by limiting the number of requests per period')
                     ->schema([
-                        \Filament\Infolists\Components\TextEntry::make('supplier_name')
+                        TextEntry::make('supplier_name')
                             ->label('Vendor Name')
                             ->weight(FontWeight::SemiBold)
                             ->inlineLabel(),
-                        \Filament\Infolists\Components\TextEntry::make('typeCompany.companyType')->label('Type of Company')
+                        TextEntry::make('typeCompany.companyType')->label('Type of Company')
                             ->weight(FontWeight::SemiBold)
                             ->inlineLabel(),
-                        \Filament\Infolists\Components\TextEntry::make('description')
+                        TextEntry::make('description')
                             ->label('Description / Product ')
                             ->weight(FontWeight::SemiBold)
                             ->columnSpanFull(),
 
                         \Filament\Infolists\Components\Group::make()->schema([
-                            \Filament\Infolists\Components\TextEntry::make('contact_person')
+                            TextEntry::make('contact_person')
                                 ->weight(FontWeight::SemiBold),
-                            \Filament\Infolists\Components\TextEntry::make('contact_phone')
+                            TextEntry::make('contact_phone')
                                 ->weight(FontWeight::SemiBold),
-                            \Filament\Infolists\Components\TextEntry::make('contact_email')
+                            TextEntry::make('contact_email')
                                 ->weight(FontWeight::SemiBold),
                         ])->columns(3)->columnSpanFull(),
-                        \Filament\Infolists\Components\TextEntry::make('address')
+                        TextEntry::make('address')
                             ->weight(FontWeight::SemiBold)
                             ->label('Address')
                             ->columnSpanFull(),
                         \Filament\Infolists\Components\Group::make()->schema([
-                            \Filament\Infolists\Components\TextEntry::make('province.province')
+                            TextEntry::make('province.province')
                                 ->weight(FontWeight::SemiBold),
-                            \Filament\Infolists\Components\TextEntry::make('city.city')
+                            TextEntry::make('city.city')
                                 ->weight(FontWeight::SemiBold),
-                            \Filament\Infolists\Components\TextEntry::make('website')
+                            TextEntry::make('website')
                                 ->weight(FontWeight::SemiBold),
                         ])->columns(3)->columnSpanFull(),
                     ])->columns(2),
                 \Filament\Infolists\Components\Section::make('Other Information')
                     // ->description('Prevent abuse by limiting the number of requests per period')
                     ->schema([
-                        \Filament\Infolists\Components\TextEntry::make('legal_document')
+                        TextEntry::make('legal_document')
                             // ->size(50)
                             ->weight(FontWeight::SemiBold)
                             ->listWithLineBreaks()
                             ->bulleted(),
-                        \Filament\Infolists\Components\TextEntry::make('bank.bank_type')->weight(FontWeight::SemiBold),
+                        TextEntry::make('bank.bank_type')->weight(FontWeight::SemiBold),
 
                         \Filament\Infolists\Components\Group::make()->schema([
-                            \Filament\Infolists\Components\IconEntry::make('tax_register')
+                            IconEntry::make('tax_register')
                                 // ->inlineLabel()
                                 ->boolean(),
 
-                            \Filament\Infolists\Components\IconEntry::make('Terms_condition')
+                            IconEntry::make('Terms_condition')
                                 // ->inlineLabel()
                                 ->boolean()
                         ])

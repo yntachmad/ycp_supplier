@@ -14,12 +14,11 @@ class VendorExporter extends Exporter
     public static function getColumns(): array
     {
         return [
-            // ExportColumn::make('id')
-            //     ->label('ID'),
-            ExportColumn::make('group.group_name')->label('Group Name'),
-            // ExportColumn::make('category_id'),
-            // ExportColumn::make('classification_id'),
-            // ExportColumn::make('subclassification_id'),
+            // ExportColumn::make('id')->label('ID'),
+            ExportColumn::make('group.group_name')->label('Group'),
+            ExportColumn::make('category.category_name')->label('Category'),
+            ExportColumn::make('classification.classification_name')->label('Classification'),
+            ExportColumn::make('subclassification_id'),
             // ExportColumn::make('description'),
             // ExportColumn::make('typeCompany.id'),
             // ExportColumn::make('supplier_name'),
