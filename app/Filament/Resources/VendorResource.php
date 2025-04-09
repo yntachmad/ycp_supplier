@@ -47,10 +47,12 @@ use Filament\Tables\Columns\CheckboxColumn;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Tables\Actions\ExportBulkAction;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use App\Filament\Resources\VendorResource\Pages;
 use Filament\Actions\Exports\Enums\ExportFormat;
 use NunoMaduro\Collision\Adapters\Phpunit\State;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use App\Filament\Resources\VendorResource\RelationManagers;
 
 class VendorResource extends Resource
@@ -452,6 +454,13 @@ class VendorResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
+                    // \pxlrbt\FilamentExcel\Actions\Tables\ExportAction::make()->exports([
+                    //     \pxlrbt\FilamentExcel\Exports\ExcelExport::make()->withColumns([
+
+                    //         \pxlrbt\FilamentExcel\Columns\Column::make('created_at'),
+                    //         \pxlrbt\FilamentExcel\Columns\Column::make('deleted_at'),
+                    //     ]),
+                    // ]),
 
                 ]),
                 Tables\Actions\ExportBulkAction::make()
@@ -460,7 +469,11 @@ class VendorResource extends Resource
                     ->columnMapping(false)
                     ->formats([
                         ExportFormat::Xlsx,
-                    ])
+                    ]),
+                // ExportAction::make()->exports([
+                //     ExcelExport::make('table')->fromTable(),
+                //     ExcelExport::make('form')->fromForm(),
+                // ])
             ]);
     }
 
