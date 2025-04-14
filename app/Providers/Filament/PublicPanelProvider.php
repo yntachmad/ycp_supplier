@@ -27,7 +27,7 @@ class PublicPanelProvider extends PanelProvider
             ->id('public')
             ->path('public')
             ->breadcrumbs(false)
-            ->maxContentWidth(\Filament\Support\Enums\MaxWidth::FitContent)
+            // ->maxContentWidth(\Filament\Support\Enums\MaxWidth::FitContent)
             ->spa()
             // ->path('supplier')
             ->topNavigation()
@@ -52,7 +52,7 @@ class PublicPanelProvider extends PanelProvider
                 // Widgets\AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
             ])
-            ->viteTheme('resources/css/filament/public/theme.css')
+            // ->viteTheme('resources/css/filament/public/theme.css')
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

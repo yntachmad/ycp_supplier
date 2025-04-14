@@ -248,7 +248,7 @@ class VendorResource extends Resource
                             ->label('Legal Documents')
                             ->options([
                                 'ID Card' => 'ID Card',
-                                'SIUP' => 'SIUP',
+                                'SIUP' => 'SIUP/NIB',
                                 'NPWP' => 'NPWP',
                                 'Financial Audited Statement' => 'Financial Audited Statement',
                                 'Domicilie' => 'Domicilie',
@@ -368,7 +368,7 @@ class VendorResource extends Resource
                 //     ->dateTime()
                 //     ->sortable()
                 //     ->toggleable(isToggledHiddenByDefault: true),
-            ])
+            ])->defaultSort('created_at', 'desc')
             // ->contentGrid([
             //     'md' => 2,
             //     'xl' => 3,

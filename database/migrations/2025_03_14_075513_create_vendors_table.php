@@ -27,10 +27,10 @@ return new class extends Migration {
             $table->foreignId('province_id')->nullable()->constrained('provinces')->onDelete('set null');
             $table->foreignId('city_id')->nullable()->constrained('cities')->onDelete('set null');
             $table->string('legal_document')->nullable();
-            // $table->enum('tax_register', ['no', 'yes'])->nullable();
-            // $table->enum('Terms_condition', ['no', 'yes'])->nullable();
-            $table->integer('tax_register')->nullable();
-            $table->integer('Terms_condition')->nullable();
+            $table->enum('verified', ['no', 'yes'])->nullable();
+            $table->enum('trained', ['no', 'yes'])->nullable();
+            $table->enum('tax_register', ['no', 'yes'])->nullable();
+            $table->enum('Terms_condition', ['no', 'yes'])->nullable();
             $table->foreignId('bank_id')->nullable()->constrained('banks')->onDelete('set null');
             $table->softDeletes();
             $table->integer('created_by')->nullable();

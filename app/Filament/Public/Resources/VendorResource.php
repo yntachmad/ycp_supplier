@@ -22,9 +22,11 @@ class VendorResource extends Resource
 {
     protected static ?string $model = Vendor::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
 
-    protected static bool $shouldRegisterNavigation = false;
+    protected static ?string $navigationLabel = 'Humanitarian Supply Chain';
+
+    // protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form
     {
@@ -83,6 +85,9 @@ class VendorResource extends Resource
             ->recordUrl(
                 false
             )
+            ->queryStringIdentifier('vendors')
+            ->defaultPaginationPageOption(25)
+            ->paginated([25, 50, 100, 200, 500, 'all'])
             // ->paginated(false)
             ->columns([
                 Tables\Columns\TextColumn::make('classification.classification_name')

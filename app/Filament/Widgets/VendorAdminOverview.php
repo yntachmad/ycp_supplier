@@ -9,6 +9,8 @@ use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 
 class VendorAdminOverview extends BaseWidget
 {
+
+    protected static bool $isLazy = false;
     protected function getStats(): array
     {
         return [
@@ -59,15 +61,15 @@ class VendorAdminOverview extends BaseWidget
         ];
     }
 
-    // protected function getHeading(): ?string
-    // {
-    //     return 'Analytics';
-    // }
+    protected function getHeading(): ?string
+    {
+        return 'Yayasan CARE Peduli';
+    }
 
-    // protected function getDescription(): ?string
-    // {
-    //     return 'An overview of some analytics.';
-    // }
+    protected function getDescription(): ?string
+    {
+        return 'Humanitarian Supply Chain';
+    }
 
     public function goto()
     {

@@ -6,5 +6,6 @@ export default {
         './app/Filament/Public/**/*.php',
         './resources/views/filament/public/**/*.blade.php',
         './vendor/filament/**/*.blade.php',
+        './resources/css/filament/public/theme.css',
     ],
 }
