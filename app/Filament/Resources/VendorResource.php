@@ -95,6 +95,32 @@ class VendorResource extends Resource
                 Forms\Components\Card::make()
                     // ->description('Prevent abuse by limiting the number of requests per period')
                     ->schema([
+
+                        Forms\Components\Toggle::make('verified')
+                            ->label('is Verified Vendor ?')
+                            ->inlineLabel()
+                            ->required(),
+                        // Forms\Components\Checkbox::make('verified'),
+                        Forms\Components\Checkbox::make('trained'),
+                        // \Filament\Forms\Components\Select::make('verified')->label('Verified Vendor')
+                        //     ->inlineLabel()
+                        //     ->options([
+                        //         'yes' => 'Yes',
+                        //         'no' => 'No',
+                        //         // 'published' => 'Published',
+                        //     ]),
+                        // \Filament\Forms\Components\Select::make('trained')->label('Trained Vendor')
+                        //     ->inlineLabel()
+                        //     ->options([
+                        //         'yes' => 'Yes',
+                        //         'no' => 'No',
+                        //         // 'published' => 'Published',
+                        //     ]),
+                        // Checkbox::make('verified')->label('is Verified Vendor ?'),
+                        // Forms\Components\TextInput::make('tax_register')
+                        //     ->required(),
+                        // \Filament\Forms\Components\Toggle::make('Terms_condition'),
+                        // Checkbox::make('trained'),
                         Forms\Components\Select::make('classification_id')
                             ->relationship(name: 'classification', titleAttribute: 'classification_name')
                             ->afterStateUpdated(function (Set $set) {
@@ -224,10 +250,6 @@ class VendorResource extends Resource
 
                         Forms\Components\TextInput::make('website')
                             ->maxLength(255),
-
-
-
-
                         // ->bulkToggleable(),
 
 
@@ -275,19 +297,48 @@ class VendorResource extends Resource
             // ->defaultPaginationPageOption(2)
             // ->extremePaginationLinks(5)
             ->columns([
+
+                \Filament\Tables\Columns\IconColumn::make('verified')
+                    ->label('Status')
+                    ->icon(fn(string $state): string => match ($state) {
+                        '1' => 'heroicon-o-check-circle',
+                        '0' => 'heroicon-o-minus-circle',
+                    // 'reviewing' => 'heroicon-o-clock',
+                    // 'published' => 'heroicon-o-check-circle',
+                    })
+                    ->color(fn(string $state): string => match ($state) {
+                        '1' => 'primary',
+                        '0' => 'gray',
+                        // 'reviewing' => 'warning',
+                        // 'published' => 'success',
+                        default => 'danger',
+                    }),
+                // ->description(fn(Vendor $record): string => mb_strlen($record->Subclassification['subclassification_name']) > 25 ? substr($record->Subclassification['subclassification_name'], 0, 25) . '..' : $record->Subclassification['subclassification_name']),
+                // \Filament\Tables\Columns\IconColumn::make('verified')
+                //     ->label('Status')
+                //     ->boolean(),
+                // Tables\Columns\TextColumn::make('verified')
+                //     ->label('Status')
+                //     ->sortable()
+                //     ->searchable(),
+                // ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('classification.classification_name')
                     ->label('Services')
+                    ->size('sm')
                     ->searchable()
+                    ->color((fn(Vendor $record): string => $record->verified == 1 ? 'primary' : 'gray'))
+                    // ->limit(5)
                     ->weight(FontWeight::Bold)
-                    ->color('primary')
-                    ->description(fn(Vendor $record): string => $record->Subclassification['subclassification_name'])
+                    // ->color('primary')
+                    ->description(fn(Vendor $record): string => mb_strlen($record->Subclassification['subclassification_name']) > 25 ? substr($record->Subclassification['subclassification_name'], 0, 25) . '..' : $record->Subclassification['subclassification_name'])
                     ->sortable(),
                 Tables\Columns\TextColumn::make('supplier_name')
                     ->label('Vendor Name')
+                    // ->prefix('heroicon-o-check-circle')
                     // ->wrap()
                     ->words(3)
                     ->weight(FontWeight::Bold)
-                    ->description(fn(Vendor $record): string => $record->category_id != null ? $record->category['category_name'] : '-')
+                    ->description(fn(Vendor $record): string => $record->trained != null ? 'Trained' : 'Untrained')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('province.province')
                     ->description(fn(Vendor $record): string => $record->city['city'])
@@ -376,6 +427,14 @@ class VendorResource extends Resource
             ->filters([
 
                 // Tables\Filters\TrashedFilter::make(),
+                SelectFilter::make('verified')
+                    ->label('Verified Vendor')
+                    ->options([
+                        '1' => 'Verified',
+                        '0' => 'Unverified',
+                    ]),
+                // ->preload(),
+                // ->relationship(name: 'classification', titleAttribute: 'classification_name'),
                 SelectFilter::make('classification_id')
                     ->label('Services')
                     ->multiple()
@@ -549,6 +608,12 @@ class VendorResource extends Resource
                                 ->boolean(),
 
                             IconEntry::make('Terms_condition')
+                                // ->inlineLabel()
+                                ->boolean(),
+                            IconEntry::make('verified')
+                                // ->inlineLabel()
+                                ->boolean(),
+                            IconEntry::make('trained')
                                 // ->inlineLabel()
                                 ->boolean()
                         ])

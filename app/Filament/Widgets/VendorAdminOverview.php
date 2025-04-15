@@ -14,6 +14,7 @@ class VendorAdminOverview extends BaseWidget
     protected function getStats(): array
     {
         return [
+
             Stat::make('Vendors', Vendor::query()->count())
                 ->icon('heroicon-o-users')
                 ->url('/admin/vendors')
@@ -41,7 +42,19 @@ class VendorAdminOverview extends BaseWidget
                 ->icon('heroicon-o-users')
                 ->url('admin/vendors?tableFilters[Category_id][values][0]=3')
                 ->color('primary')
-                ->description('Services Category')
+                ->description('Services Category'),
+            Stat::make('verified', Vendor::query()->where('verified', 1)->count())
+                ->label('Verified')
+                ->icon('heroicon-o-users')
+                ->url('admin/vendors?tableFilters[Category_id][values][0]=3')
+                ->color('primary')
+                ->description('Verified Vendors'),
+            Stat::make('verified', Vendor::query()->where('verified', 0)->count())
+                ->label('Unverified')
+                ->icon('heroicon-o-users')
+                ->url('admin/vendors?tableFilters[Category_id][values][0]=3')
+                ->color('primary')
+                ->description('Unverified Vendors')
             // ->descriptionIcon('heroicon-m-arrow-trending-up', IconPosition::After),
             // Stat::make('Average time on page', '3:12')
             //     ->description('3% increase')

@@ -16,11 +16,17 @@ class ProvinceSeeder extends Seeder
         //
         DB::table('provinces')->delete();
         $provinces = array(
+            //1
             array('id' => 1, 'province' => "Bali"),
+            //2
             array('id' => 2, 'province' => "Bangka Belitung"),
+            //3
             array('id' => 3, 'province' => "Banten"),
+            //4
             array('id' => 4, 'province' => "Bengkulu"),
+            //5
             array('id' => 5, 'province' => "Daerah Istimewa Yogyakarta"),
+            //6
             array('id' => 6, 'province' => "DKI Jakarta"),
             array('id' => 7, 'province' => "Gorontalo"),
             array('id' => 8, 'province' => "Jambi"),
