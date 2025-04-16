@@ -19,6 +19,11 @@ class Dashboard extends \Filament\Pages\Dashboard
         return 'Dashboard';
     }
 
+    public function getColumns(): int|string|array
+    {
+        return 2;
+    }
+
 
     // protected int|string|array $columnSpan = [
     //     'md' => 2,

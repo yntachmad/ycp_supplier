@@ -96,12 +96,19 @@ class VendorResource extends Resource
                     // ->description('Prevent abuse by limiting the number of requests per period')
                     ->schema([
 
-                        Forms\Components\Toggle::make('verified')
+                        // Forms\Components\Toggle::make('verified')
+                        //     ->label('is Verified Vendor ?')
+                        //     ->inlineLabel()
+                        //     ->required(),
+                        Forms\Components\Checkbox::make('verified')
                             ->label('is Verified Vendor ?')
-                            ->inlineLabel()
-                            ->required(),
-                        // Forms\Components\Checkbox::make('verified'),
-                        Forms\Components\Checkbox::make('trained'),
+                            ->afterStateUpdated(function (Set $set) {
+                                $set('trained', null);
+                            })
+                            ->live(),
+                        Forms\Components\Checkbox::make('trained')
+                            ->label('is Trained Vendor ?')
+                            ->live(),
                         // \Filament\Forms\Components\Select::make('verified')->label('Verified Vendor')
                         //     ->inlineLabel()
                         //     ->options([
@@ -155,7 +162,7 @@ class VendorResource extends Resource
                                     ->preload()
                                     ->required(),
                                 Forms\Components\TextInput::make('subclassification_name')
-                                    ->label('Sub Service Name')
+                                    ->label('Sub Services Name')
                                     ->required(),
                             ])
                             ->searchable()
@@ -173,6 +180,8 @@ class VendorResource extends Resource
                             ->createOptionForm([
                                 Forms\Components\TextInput::make('category_name')
                                     ->required(),
+                                Forms\Components\Textarea::make('category_description')
+                                    ->required(),
 
                             ])
                             ->label('Category'),
@@ -181,6 +190,8 @@ class VendorResource extends Resource
                             ->searchable()
                             ->createOptionForm([
                                 Forms\Components\TextInput::make('group_name')
+                                    ->required(),
+                                Forms\Components\Textarea::make('group_description')
                                     ->required(),
 
                             ])
@@ -203,11 +214,11 @@ class VendorResource extends Resource
                                     ->relationship(name: 'TypeCompany', titleAttribute: 'companyType')
                                     ->searchable()
                                     ->createOptionForm([
-                                        Forms\Components\TextInput::make('name')
+                                        Forms\Components\TextInput::make('companyType')
                                             ->required(),
-                                        Forms\Components\TextInput::make('email')
-                                            ->required()
-                                            ->email(),
+                                        Forms\Components\TextInput::make('information')
+                                            ->required(),
+
                                     ])
                                     ->preload()
                                     ->required()
@@ -289,28 +300,30 @@ class VendorResource extends Resource
     {
         return $table
             ->striped()
+            ->recordUrl(
+                false
+            )
+
             // ->openRecordUrlInNewTab()
             // ->deferLoading()
             // ->heading('Clients')
             // ->paginated(false)
-            // ->paginated([5, 25, 50, 100, 200, 500, 'all'])
+            ->paginated([25, 50, 100, 200, 500, 'all'])
             // ->defaultPaginationPageOption(2)
-            // ->extremePaginationLinks(5)
+            // ->extremePaginationLinks(50)
             ->columns([
 
                 \Filament\Tables\Columns\IconColumn::make('verified')
-                    ->label('Status')
+                    ->label('Verified')
                     ->icon(fn(string $state): string => match ($state) {
                         '1' => 'heroicon-o-check-circle',
                         '0' => 'heroicon-o-minus-circle',
-                    // 'reviewing' => 'heroicon-o-clock',
-                    // 'published' => 'heroicon-o-check-circle',
+
                     })
                     ->color(fn(string $state): string => match ($state) {
                         '1' => 'primary',
                         '0' => 'gray',
-                        // 'reviewing' => 'warning',
-                        // 'published' => 'success',
+
                         default => 'danger',
                     }),
                 // ->description(fn(Vendor $record): string => mb_strlen($record->Subclassification['subclassification_name']) > 25 ? substr($record->Subclassification['subclassification_name'], 0, 25) . '..' : $record->Subclassification['subclassification_name']),
@@ -329,6 +342,7 @@ class VendorResource extends Resource
                     ->color((fn(Vendor $record): string => $record->verified == 1 ? 'primary' : 'gray'))
                     // ->limit(5)
                     ->weight(FontWeight::Bold)
+
                     // ->color('primary')
                     ->description(fn(Vendor $record): string => mb_strlen($record->Subclassification['subclassification_name']) > 25 ? substr($record->Subclassification['subclassification_name'], 0, 25) . '..' : $record->Subclassification['subclassification_name'])
                     ->sortable(),
@@ -337,8 +351,11 @@ class VendorResource extends Resource
                     // ->prefix('heroicon-o-check-circle')
                     // ->wrap()
                     ->words(3)
+                    // ->weight(fn(Vendor $record): string => $record->trained != 0 ? FontWeight::Bold : FontWeight::Normal)
+                    ->color((fn(Vendor $record): string => $record->trained == 1 ? 'black' : 'gray'))
+                    // ->limit(5)
                     ->weight(FontWeight::Bold)
-                    ->description(fn(Vendor $record): string => $record->trained != null ? 'Trained' : 'Untrained')
+                    ->description(fn(Vendor $record): string => $record->trained != 0 ? 'Trained' : 'Untrained')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('province.province')
                     ->description(fn(Vendor $record): string => $record->city['city'])
@@ -433,6 +450,12 @@ class VendorResource extends Resource
                         '1' => 'Verified',
                         '0' => 'Unverified',
                     ]),
+                SelectFilter::make('trained')
+                    ->label('Trained Vendor')
+                    ->options([
+                        '1' => 'Trained',
+                        '0' => 'Untrained',
+                    ]),
                 // ->preload(),
                 // ->relationship(name: 'classification', titleAttribute: 'classification_name'),
                 SelectFilter::make('classification_id')
@@ -478,20 +501,15 @@ class VendorResource extends Resource
                     // })
                     ->relationship(name: 'city', titleAttribute: 'city'),
 
-                // SelectFilter::make('city_id')
-                //     ->label('city')
-                //     ->options(fn(Get $get): Collection => City::query()->where('province_id', $get('province_id'))->pluck('city', 'id'))
-                //     ->multiple()
-                //     // ->live()
-                //     ->searchable()
-                //     ->preload(),
-                // // ->relationship(name: 'city', titleAttribute: 'city'),
+
 
             ])
             ->actions([
                 ActionGroup::make([
-                    ViewAction::make('view'),
+                    ViewAction::make('view')
+                        ->modalAlignment('center'),
                     EditAction::make('edit'),
+
                     // EditAction::make('edit'),
                     // Action::make('delete'),
                 ])
@@ -543,6 +561,12 @@ class VendorResource extends Resource
                 \Filament\Infolists\Components\Section::make()
                     // ->description('Prevent abuse by limiting the number of requests per period')
                     ->schema([
+                        IconEntry::make('verified')
+                            ->inlineLabel()
+                            ->boolean(),
+                        IconEntry::make('trained')
+                            ->inlineLabel()
+                            ->boolean(),
                         TextEntry::make('classification.classification_name')
                             ->weight(FontWeight::SemiBold)
                             ->label('Service')
@@ -610,12 +634,7 @@ class VendorResource extends Resource
                             IconEntry::make('Terms_condition')
                                 // ->inlineLabel()
                                 ->boolean(),
-                            IconEntry::make('verified')
-                                // ->inlineLabel()
-                                ->boolean(),
-                            IconEntry::make('trained')
-                                // ->inlineLabel()
-                                ->boolean()
+
                         ])
 
                     ])->columns(3),

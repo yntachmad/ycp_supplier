@@ -6,12 +6,14 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Password;
 
 class UserResource extends Resource
 {
@@ -31,22 +33,61 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('username')
-                    ->required()
-                    ->string()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required('create')
-                    ->maxLength(255),
+                Forms\Components\Card::make()
+                    // ->description('Prevent abuse by limiting the number of requests per period')
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->label('Full Name')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('username')
+                            ->required()
+                            ->string()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('email')
+                            ->email()
+                            // ->unique('create')
+                            ->required()
+                            ->maxLength(255),
+                        // Forms\Components\DateTimePicker::make('email_verified_at'),
+                        Forms\Components\TextInput::make('password')
+                            ->password()
+                            ->revealable()
+                            ->visibleOn('create')
+                            ->required('create')
+                            ->minLength(6)
+                            ->maxLength(255),
+                        Forms\Components\Select::make('role')
+                            ->required()
+                            ->options([
+                                'admin' => 'Admin',
+                                'superAdmin' => 'Super Admin',
+                            ])
+                    ])->columns(2),
+
+                Section::make('Change Password')
+                    ->visibleOn('edit')
+                    ->schema([
+                        Forms\Components\TextInput::make('password')
+                            ->password()
+                            ->revealable()
+                            // ->visibleOn('edit')
+                            ->minLength(6)
+                            ->maxLength(255),
+
+                        Forms\Components\TextInput::make('password_confirmation')
+                            ->password()
+                            ->revealable()
+                            // ->visibleOn('edit')
+                            ->same('password')
+                            ->requiredWith('password')
+                            ->minLength(6)
+                            ->maxLength(255),
+                    ])
+
+
+
+
             ]);
     }
 
@@ -58,17 +99,17 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
+                Tables\Columns\TextColumn::make('role')
+                    // ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                // Tables\Columns\TextColumn::make('created_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: true),
+                // Tables\Columns\TextColumn::make('updated_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -98,8 +139,8 @@ class UserResource extends Resource
         return [
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
-            'view' => Pages\ViewUser::route('/{record}'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            // 'view' => Pages\ViewUser::route('/{record}'),
+            // 'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
 

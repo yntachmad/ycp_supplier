@@ -88,6 +88,6 @@ class AdminPanelProvider extends PanelProvider
 
     public function getHeaderWidgetsColumns(): int|array
     {
-        return 3;
+        return 4;
     }
 }

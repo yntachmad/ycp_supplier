@@ -46,13 +46,13 @@ class VendorAdminOverview extends BaseWidget
             Stat::make('verified', Vendor::query()->where('verified', 1)->count())
                 ->label('Verified')
                 ->icon('heroicon-o-users')
-                ->url('admin/vendors?tableFilters[Category_id][values][0]=3')
+                ->url('admin/vendors?tableFilters[verified][value]=1')
                 ->color('primary')
                 ->description('Verified Vendors'),
             Stat::make('verified', Vendor::query()->where('verified', 0)->count())
                 ->label('Unverified')
                 ->icon('heroicon-o-users')
-                ->url('admin/vendors?tableFilters[Category_id][values][0]=3')
+                ->url('admin/vendors?tableFilters[verified][value]=0')
                 ->color('primary')
                 ->description('Unverified Vendors')
             // ->descriptionIcon('heroicon-m-arrow-trending-up', IconPosition::After),
@@ -74,6 +74,21 @@ class VendorAdminOverview extends BaseWidget
         ];
     }
 
+    protected function getColumns(): int
+    {
+        $count = count($this->getCachedStats());
+
+        // if ($count < 3) {
+        //     return 3;
+        // }
+
+        // if (($count % 3) !== 1) {
+        //     return 3;
+        // }
+
+        return 4;
+    }
+
     protected function getHeading(): ?string
     {
         return 'Yayasan CARE Peduli';
@@ -83,6 +98,13 @@ class VendorAdminOverview extends BaseWidget
     {
         return 'Humanitarian Supply Chain';
     }
+
+    public function getHeaderWidgetsColumns(): int|array
+    {
+        return 1;
+    }
+
+
 
     public function goto()
     {
