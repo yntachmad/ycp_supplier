@@ -16,6 +16,16 @@ class VendorExporter extends Exporter
         return [
             // ExportColumn::make('id')->label('ID'),
 
+            ExportColumn::make('verified')->label('Verified')
+                ->formatStateUsing(
+                    fn(string $state): string =>
+                    $state === '1' ? 'Yes' : 'No'
+                ),
+            ExportColumn::make('trained')->label('Trained')
+                ->formatStateUsing(
+                    fn(string $state): string =>
+                    $state === '1' ? 'Yes' : 'No'
+                ),
             ExportColumn::make('classification.classification_name')->label('Services'),
             ExportColumn::make('Subclassification.subclassification_name')->label('Sub Services'),
             ExportColumn::make('category.category_name')->label('Category'),
@@ -33,14 +43,16 @@ class VendorExporter extends Exporter
             ExportColumn::make('legal_document'),
             ExportColumn::make('bank.bank_type')->label('Bank of Account Bank'),
             ExportColumn::make('tax_register')
-                ->formatStateUsing(fn(string $state): string => __("statuses.{$state}")),
-            ExportColumn::make('Terms_condition'),
-            // ExportColumn::make('bank.id'),
-            // ExportColumn::make('deleted_at'),
-            // ExportColumn::make('created_by'),
-            // ExportColumn::make('updated_by'),
-            // ExportColumn::make('created_at'),
-            // ExportColumn::make('updated_at'),
+                ->formatStateUsing(
+                    fn(string $state): string =>
+                    $state === '1' ? 'Yes' : 'No'
+                ),
+
+            ExportColumn::make('Terms_condition')
+                ->formatStateUsing(
+                    fn(string $state): string =>
+                    $state === '1' ? 'Yes' : 'No'
+                ),
         ];
     }
 

@@ -49,7 +49,7 @@ class BankResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('bankType')
+                Tables\Columns\TextColumn::make('bank_type')
                     ->searchable(),
                 // Tables\Columns\TextColumn::make('deleted_at')
                 //     ->dateTime()

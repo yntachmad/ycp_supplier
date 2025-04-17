@@ -2,18 +2,19 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
-use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Models\User;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Resources\Resource;
+use Illuminate\Support\Facades\Hash;
+use Filament\Forms\Components\Section;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\UserResource\Pages;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\UserResource\RelationManagers;
 
 class UserResource extends Resource
 {
@@ -42,10 +43,12 @@ class UserResource extends Resource
                             ->maxLength(255),
                         Forms\Components\TextInput::make('username')
                             ->required()
+                            ->unique(ignoreRecord: true)
                             ->string()
                             ->maxLength(255),
                         Forms\Components\TextInput::make('email')
                             ->email()
+                            ->unique(ignoreRecord: true)
                             // ->unique('create')
                             ->required()
                             ->maxLength(255),
@@ -54,7 +57,9 @@ class UserResource extends Resource
                             ->password()
                             ->revealable()
                             ->visibleOn('create')
-                            ->required('create')
+                            ->dehydrateStateUsing(fn($state) => Hash::make($state))
+                            ->dehydrated(fn($state) => filled($state))
+                            ->required(fn(string $context): bool => $context === 'create')
                             ->minLength(6)
                             ->maxLength(255),
                         Forms\Components\Select::make('role')
@@ -69,20 +74,24 @@ class UserResource extends Resource
                     ->visibleOn('edit')
                     ->schema([
                         Forms\Components\TextInput::make('password')
+                            ->dehydrateStateUsing(fn($state) => Hash::make($state))
+                            ->dehydrated(fn($state) => filled($state))
+                            ->required(fn(string $context): bool => $context === 'create')
                             ->password()
+                            ->nullable()
                             ->revealable()
-                            // ->visibleOn('edit')
+                            ->visibleOn('edit')
                             ->minLength(6)
                             ->maxLength(255),
 
-                        Forms\Components\TextInput::make('password_confirmation')
-                            ->password()
-                            ->revealable()
-                            // ->visibleOn('edit')
-                            ->same('password')
-                            ->requiredWith('password')
-                            ->minLength(6)
-                            ->maxLength(255),
+                        // Forms\Components\TextInput::make('password_confirmation')
+                        //     ->password()
+                        //     ->revealable()
+                        //     // ->visibleOn('edit')
+                        //     ->same('password')
+                        //     ->requiredWith('password')
+                        //     ->minLength(6)
+                        //     ->maxLength(255),
                     ])
 
 
@@ -150,5 +159,14 @@ class UserResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()->role == 'superAdmin' ? true : false; // Only show for admin users
+        // return auth()->user()->hasRole(['superAdmin']);
+        //
+        // // Show for both admin and super admin users
+        // return false;
     }
 }

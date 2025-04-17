@@ -2,12 +2,13 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\Auth\LoginCustom;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Navigation\UserMenuItem;
+use App\Filament\Pages\Auth\LoginCustom;
 use Filament\Navigation\NavigationGroup;
 use Filament\Http\Middleware\Authenticate;
 use Illuminate\Session\Middleware\StartSession;
@@ -19,6 +20,7 @@ use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Filament\Pages\Auth\EditProfile;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -36,6 +38,13 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogoHeight('2.6rem')
             ->favicon(asset('images/favicon.ico'))
             ->topNavigation()
+            // ->profile()
+            // ->userMenuItems([
+            //     UserMenuItem::make()
+            //         ->label('Reset Password')
+            //         ->url(fn(): string => \App\Filament\Resources\UserResource\Pages\EditUser::getUrl())
+            //         ->icon('heroicon-o-user-circle'),
+            // ])
 
             // ->sidebarCollapsibleOnDesktop(true)
             // ->collapsibleNavigationGroups(true)
