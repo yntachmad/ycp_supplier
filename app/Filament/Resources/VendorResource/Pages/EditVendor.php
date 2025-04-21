@@ -21,6 +21,11 @@ class EditVendor extends EditRecord
         ];
     }
 
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
+
     // protected function configureAction(Action $action): void
     // {
 

@@ -28,7 +28,7 @@ class PublicPanelProvider extends PanelProvider
             ->path('public')
             ->breadcrumbs(false)
             // ->maxContentWidth(\Filament\Support\Enums\MaxWidth::FitContent)
-            ->spa()
+            // ->spa()
             // ->path('supplier')
             ->topNavigation()
             // ->brandLogo(fn() => view('/filament.logo.logo'))

@@ -345,7 +345,7 @@ class VendorResource extends Resource
                     ->color((fn(Vendor $record): string => $record->trained == 1 ? 'black' : 'gray'))
                     // ->limit(5)
                     ->weight(FontWeight::Bold)
-                    ->description(fn(Vendor $record): string => $record->trained != 0 ? 'Trained' : 'Untrained')
+                    ->description(fn(Vendor $record): string => $record->trained != 0 ? $record->category['category_name'] . ' - ' . 'Trained' : $record->category['category_name'] . ' - ' . 'Untrained')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('province.province')
                     ->description(fn(Vendor $record): string => $record->city['city'])
@@ -366,12 +366,12 @@ class VendorResource extends Resource
                     ->label('Contact')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('category.category_name')
-                    ->label('Category')
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    // ->description(fn(Vendor $record): string => $record->contact_phone)
-                    ->searchable()
-                    ->sortable(),
+                // Tables\Columns\TextColumn::make('category.category_name')
+                //     ->label('Category')
+                //     ->toggleable(isToggledHiddenByDefault: true)
+                //     // ->description(fn(Vendor $record): string => $record->contact_phone)
+                //     ->searchable()
+                //     ->sortable(),
             ])->defaultSort('created_at', 'desc')
             // ->contentGrid([
             //     'md' => 2,
