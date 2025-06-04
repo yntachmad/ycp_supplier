@@ -2,8 +2,9 @@
 
 namespace App\Filament\Resources\VendorResource\Pages;
 
-use App\Filament\Resources\VendorResource;
 use Filament\Actions;
+use Filament\Support\Enums\MaxWidth;
+use App\Filament\Resources\VendorResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateVendor extends CreateRecord
@@ -15,6 +16,11 @@ class CreateVendor extends CreateRecord
     protected function getRedirectUrl(): string
     {
         return static::getResource()::getUrl('index');
+    }
+
+    public function getMaxContentWidth(): MaxWidth
+    {
+        return MaxWidth::SixExtraLarge; // Or any other MaxWidth enum value
     }
 
 

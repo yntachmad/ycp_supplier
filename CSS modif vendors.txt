@@ -1,0 +1,14 @@
+http://127.0.0.1:8000/css/filament/filament/app.css?v=3.3.10.0
+
+
+.gap-6{gap:1.5rem}
+
+.gap-6{gap:0.45rem}
+
+
+.py-4 {
+    padding-bottom: 0.4rem;
+    padding-top: 0.4rem;
+}
+
+.py-4{padding-bottom:0.4rem;padding-top:0.4rem}

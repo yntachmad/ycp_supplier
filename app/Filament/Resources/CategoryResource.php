@@ -41,6 +41,7 @@ class CategoryResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Textarea::make('category_description')
+                    ->required()
                     ->columnSpanFull(),
             ]);
     }

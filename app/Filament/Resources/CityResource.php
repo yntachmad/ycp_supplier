@@ -40,8 +40,13 @@ class CityResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('province_id')
-                    ->numeric(),
+                \Filament\Forms\Components\Select::make('province_id')
+                    ->relationship(name: 'province', titleAttribute: 'province')
+                    ->searchable()
+                    ->preload()
+                    ->required()
+                    ->label('Province Name'),
+
                 Forms\Components\TextInput::make('city')
                     ->required()
                     ->maxLength(255),

@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Vendor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class CompanyType extends Model
 {
@@ -25,4 +29,9 @@ class CompanyType extends Model
     // }
 
     protected $guarded = [];
+
+    public function vendors(): HasMany
+    {
+        return $this->hasMany(Vendor::class);
+    }
 }

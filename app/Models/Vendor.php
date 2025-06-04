@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Models\Bank;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Vendor extends Model
 {
@@ -49,7 +51,8 @@ class Vendor extends Model
 
     public function TypeCompany(): BelongsTo
     {
-        return $this->belongsTo(CompanyType::class);
+        return $this->BelongsTo(CompanyType::class);
+
     }
     public function province(): BelongsTo
     {
@@ -66,6 +69,7 @@ class Vendor extends Model
 
     protected $casts = [
         'legal_document' => 'array',
+        'type_company_id' => 'array',
         'tax_register' => 'boolean',
         'Terms_condition' => 'boolean',
     ];

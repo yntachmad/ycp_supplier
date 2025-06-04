@@ -42,9 +42,10 @@ class CompanyTypeResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Textarea::make('Information')
+                    ->required()
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('legal_documents')
-                    ->columnSpanFull(),
+                    ->required()
             ]);
     }
 

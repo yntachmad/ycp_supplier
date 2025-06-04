@@ -3,8 +3,9 @@
 namespace App\Filament\Exports;
 
 use App\Models\Vendor;
-use Filament\Actions\Exports\ExportColumn;
+use App\Models\CompanyType;
 use Filament\Actions\Exports\Exporter;
+use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Models\Export;
 
 class VendorExporter extends Exporter
@@ -27,13 +28,29 @@ class VendorExporter extends Exporter
                     $state === '1' ? 'Yes' : 'No'
                 ),
             ExportColumn::make('classification.classification_name')->label('Services'),
-            ExportColumn::make('Subclassification.subclassification_name')->label('Sub Services'),
-            ExportColumn::make('category.category_name')->label('Category'),
-            ExportColumn::make('group.group_name')->label('Group'),
+            // ExportColumn::make('Subclassification.subclassification_name')->label('Sub Services'),
+            ExportColumn::make('category.category_name')->label('Category of Service'),
+            // ExportColumn::make('group.group_name')->label('Group'),
             ExportColumn::make('supplier_name')->label('Vendors Name'),
-            ExportColumn::make('TypeCompany.companyType')->label('Type of Company'),
-            ExportColumn::make('description')->label('Description / Products'),            //
-            ExportColumn::make('contact_person')->label('PIC'),
+            ExportColumn::make('type_company_id')
+                ->label('Category of Vendor')
+                ->formatStateUsing(function ($state) {
+                    // var_dump($state);
+                    $data = explode(",", $state);
+                    $data1 = [];
+                    foreach ($data as $item) {
+                        $getItem = CompanyType::where('id', $item)->first();
+
+                        $data1[] = $getItem['companyType'];
+
+                    }
+                    $data1 = implode(", ", $data1);
+
+                    // var_dump($data);
+                    return $data1;
+                }),
+            ExportColumn::make('description')->label('Products /Services'),            //
+            ExportColumn::make('contact_person')->label('Contact Person'),
             ExportColumn::make('contact_phone')->label('Phone'),
             ExportColumn::make('contact_email')->label('Email'),
             ExportColumn::make('website')->label('Website'),

@@ -84,14 +84,7 @@ class UserResource extends Resource
                             ->minLength(6)
                             ->maxLength(255),
 
-                        // Forms\Components\TextInput::make('password_confirmation')
-                        //     ->password()
-                        //     ->revealable()
-                        //     // ->visibleOn('edit')
-                        //     ->same('password')
-                        //     ->requiredWith('password')
-                        //     ->minLength(6)
-                        //     ->maxLength(255),
+
                     ])
 
 
@@ -105,6 +98,8 @@ class UserResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('username')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
