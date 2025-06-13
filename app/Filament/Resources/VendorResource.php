@@ -106,7 +106,7 @@ class VendorResource extends Resource
                         Forms\Components\Checkbox::make('verified')
                             ->label('Verified Vendor')
                             ->afterStateUpdated(function (Set $set) {
-                                $set('trained', null);
+                                $set('trained', 0);
                             })
                             ->live(),
                         Forms\Components\Checkbox::make('trained')
@@ -228,7 +228,7 @@ class VendorResource extends Resource
                                     ->label('Category of Vendor'),
                             ])->columns(2)->columnSpanFull(),
                         Forms\Components\Textarea::make('description')
-                            ->label('Description : Product / Services')
+                            ->label('Description : Goods / Services / Works')
                             ->rows(5)
                             ->required()
                             ->columnSpanFull(),
@@ -364,7 +364,7 @@ class VendorResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('description')
-                    ->label('Products / Services')
+                    ->label('Goods / Services / Works')
                     ->size('sm')
                     ->wrap()
                     ->words(13)
@@ -448,50 +448,58 @@ class VendorResource extends Resource
 
                 SelectFilter::make('type_company_id')
                     ->label('Category of Vendor')
-                    ->multiple()
+                    // ->multiple()
                     ->searchable()
                     ->preload()
-                    // ->options(
-                    //     CompanyType::query() // Start with the query builder for better practice
-                    //         ->orderBy('companyType') // Optional: Order the options alphabetically
-                    //         ->pluck('companyType', 'id') // 'name' will be the label, 'id' will be the value
-                    //         ->toArray() // Convert the collection to a plain PHP array
-                    // )
                     ->options(CompanyType::all()->pluck('companyType', 'id'))
-                    // ->relationship(name: 'TypeCompany', titleAttribute: 'companyType')
                     ->query(function (Builder $query, array $data): Builder {
-                        // dd($data);
-            
-                        if (empty($data)) {
-                            // dd($data);
+                        if (empty($data['value'])) { // 'value' is the key for SelectFilter's selection
                             return $query;
                         }
-
-                        // dd($data);
-            
-                        // This is more complex as you're searching within an array of objects
-                        // You might need to use a raw JSON query or iterate through the selected colors
-                        // and use `whereJsonContains` for each.
-                        foreach ($data as $color) {
-
-                            // $query->where('type_company_id', 'like', "%{$color}%");
-                            $query->whereJsonContains('type_company_id', $color);
-                        }
-                        return $query;
-
-
-
-
-
-
-
-
-                        // if (isset($data['value'])) {
-                        //     // Assuming 'theme' is a direct key in the JSON
-                        //     return $query->whereJsonContains('type_company_id', $data['value']);
-                        // }
-                        // return $query;
+                        return $query->whereJsonContains('type_company_id', $data['value']);
                     }),
+                // ->relationship(name: 'TypeCompany', titleAttribute: 'companyType'),
+                // ->options(
+                //     CompanyType::query() // Start with the query builder for better practice
+                //         ->orderBy('companyType') // Optional: Order the options alphabetically
+                //         ->pluck('companyType', 'id') // 'name' will be the label, 'id' will be the value
+                //         ->toArray() // Convert the collection to a plain PHP array
+                // )
+                // ->options(CompanyType::all()->pluck('companyType', 'id'))
+                // ->relationship(name: 'TypeCompany', titleAttribute: 'companyType')
+                // ->query(function (Builder $query, array $data): Builder {
+                //     // dd($data);
+
+                //     if (empty($data)) {
+                //         // dd($data);
+                //         return $query;
+                //     }
+
+                // dd($data);
+
+                // This is more complex as you're searching within an array of objects
+                // You might need to use a raw JSON query or iterate through the selected colors
+                // and use `whereJsonContains` for each.
+                // foreach ($data as $color) {
+
+                //     // $query->where('type_company_id', 'like', "%{$color}%");
+                //     $query->whereJsonContains('type_company_id', $color);
+                // }
+                // return $query;
+
+
+
+
+
+
+                //
+
+                // if (isset($data['value'])) {
+                //     // Assuming 'theme' is a direct key in the JSON
+                //     return $query->whereJsonContains('type_company_id', $data['value']);
+                // }
+                // return $query;
+                // }),
 
 
 
@@ -505,6 +513,41 @@ class VendorResource extends Resource
                     //     $set('city_id', null);
                     // })
                     ->relationship(name: 'province', titleAttribute: 'province'),
+                SelectFilter::make('category_id')
+                    ->label('Category of Services')
+                    // ->multiple()
+                    ->searchable()
+                    ->preload()
+                    // ->live()
+                    // ->afterStateUpdated(function (Set $set) {
+                    //     $set('city_id', null);
+                    // })
+                    ->relationship(name: 'category', titleAttribute: 'category_name'),
+                SelectFilter::make('verified')
+                    ->label('Verified')
+                    // ->multiple()
+                    ->searchable()
+                    ->preload()
+                    ->options([
+                        '1' => 'yes',
+                        '0' => 'no',
+
+                    ]),
+                SelectFilter::make('trained')
+                    ->label('Trained')
+                    // ->multiple()
+                    ->searchable()
+                    ->preload()
+                    ->options([
+                        '1' => 'yes',
+                        '0' => 'no',
+
+                    ]),
+                // ->live()
+                // ->afterStateUpdated(function (Set $set) {
+                //     $set('city_id', null);
+                // })
+
                 // SelectFilter::make('city_id')
                 //     ->label('City')
                 //     // ->multiple()
@@ -612,10 +655,12 @@ class VendorResource extends Resource
                     ->schema([
                         TextEntry::make('supplier_name')
                             ->copyable()
+
+                            // ->color('primary')
                             ->copyMessage('Copied!')
                             ->label('Vendor Name')
                             // ->inlineLabel()
-                            ->weight(FontWeight::Bold),
+                            ->weight(FontWeight::Black),
 
                         TextEntry::make('type_company_id')->label('Category of Vendor')
                             ->copyable()
@@ -644,22 +689,26 @@ class VendorResource extends Resource
                         TextEntry::make('description')
                             ->copyable()
                             ->copyMessage('Copied!')
-                            ->label('Description : Products / Services')
+                            ->label('Description : Goods / Services / Works')
                             ->html()
                             ->weight(FontWeight::Bold)
+
                             ->columnSpanFull(),
 
                         \Filament\Infolists\Components\Group::make()->schema([
                             TextEntry::make('contact_person')
                                 ->copyable()
                                 ->copyMessage('Copied!')
+
                                 ->weight(FontWeight::Bold),
                             TextEntry::make('contact_phone')
                                 ->copyable()
                                 ->copyMessage('Copied!')
+
                                 ->weight(FontWeight::Bold),
                             TextEntry::make('contact_email')
                                 ->copyable()
+
                                 ->copyMessage('Copied!')
                                 // ->wrap()
                                 ->weight(FontWeight::Bold),
@@ -700,7 +749,12 @@ class VendorResource extends Resource
                         ]),
 
 
-                        TextEntry::make('bank.bank_type')->weight(FontWeight::Bold),
+                        TextEntry::make('bank.bank_type')
+                            ->label('Type of Bank Account')
+                            ->copyable()
+                            ->copyMessage('Copied!')
+                            // ->inlineLabel()
+                            ->weight(FontWeight::Bold),
 
                         \Filament\Infolists\Components\Group::make()->schema([
                             IconEntry::make('tax_register')

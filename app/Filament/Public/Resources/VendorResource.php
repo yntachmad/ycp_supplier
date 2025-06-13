@@ -32,7 +32,7 @@ class VendorResource extends Resource
 
     protected static ?string $navigationLabel = 'Humanitarian Supply Chain';
 
-    // protected static bool $shouldRegisterNavigation = false;
+
 
     public static function form(Form $form): Form
     {
@@ -89,19 +89,8 @@ class VendorResource extends Resource
     {
         return $table
             ->striped()
-            // ->recordUrl(
-            //     false
-            // )
-
-            // ->openRecordUrlInNewTab()
-            // ->deferLoading()
-            // ->heading('Clients')
-            // ->paginated(false)
             ->paginated([50, 100, 200, 500, 'all'])
-            // ->defaultPaginationPageOption(2)
-            // ->extremePaginationLinks(50)
             ->columns([
-
                 \Filament\Tables\Columns\IconColumn::make('verified')
                     ->label('Verified')
                     ->alignment('center')
@@ -123,8 +112,6 @@ class VendorResource extends Resource
                     ->sortable()
                     ->color((fn(Vendor $record): string => $record->verified == 1 ? 'primary' : 'gray'))
                     ->weight(FontWeight::Bold)
-                    // ->description(fn(Vendor $record): string => mb_strlen($record->Subclassification['subclassification_name']) > 25 ? substr($record->Subclassification['subclassification_name'], 0, 25) . '..' : $record->Subclassification['subclassification_name'])
-                    // ->sortable(),
                     ->description(fn(Vendor $record): string => $record->category['category_name'])
                     ->sortable(),
                 Tables\Columns\TextColumn::make('supplier_name')
@@ -132,19 +119,17 @@ class VendorResource extends Resource
                     ->sortable()
                     ->words(3)
                     ->color((fn(Vendor $record): string => $record->trained == 1 ? 'black' : 'gray'))
-                    // ->limit(5)
+
                     ->weight(FontWeight::Bold)
                     ->description(fn(Vendor $record): string => $record->trained != 0 ? 'Trained' : 'Untrained')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('province.province')
                     ->description(fn(Vendor $record): string => $record->city['city'])
-                    // ->wrap()
                     ->label('Location')
-                    // ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('description')
-                    ->label('Products / Services')
+                    ->label('Goods / Services / Works')
                     ->size('sm')
                     ->wrap()
                     ->words(13)
@@ -153,7 +138,6 @@ class VendorResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->description(fn(Vendor $record): string => $record->contact_phone)
                     ->label('Contact')
-                    // ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('type_company_id')
                     ->toggleable(isToggledHiddenByDefault: true)
@@ -169,59 +153,19 @@ class VendorResource extends Resource
                                 $data1[] = $getItem['companyType'];
                             }
                             $data1 = implode(", ", $data1);
-
-                            // var_dump($data);
                             return $data1;
 
                         }
-                        // var_dump($state);
-            
+
+
                     })
                     ->label('Category'),
-                // ->searchable()
-                // ->sortable(),
-                // Tables\Columns\TextColumn::make('category.category_name')
-                //     ->label('Category')
-                //     ->toggleable(isToggledHiddenByDefault: true)
-                //     // ->description(fn(Vendor $record): string => $record->contact_phone)
-                //     ->searchable()
-                //     ->sortable(),
-            ])->defaultSort('created_at', 'desc')
-            // ->contentGrid([
-            //     'md' => 2,
-            //     'xl' => 3,
-            // ])
-            ->searchPlaceholder('Search by Name / Services') // Customize your placeholder here
-            // ... other table configurations
-            ->filters([
 
-                // Tables\Filters\TrashedFilter::make(),
-                // SelectFilter::make('verified')
-                //     ->label('Verified Vendor')
-                //     ->options([
-                //         '1' => 'Verified',
-                //         '0' => 'Unverified',
-                //     ]),
-                // SelectFilter::make('trained')
-                //     ->label('Trained Vendor')
-                //     ->options([
-                //         '1' => 'Trained',
-                //         '0' => 'Untrained',
-                //     ]),
-                // ->preload(),
-                // ->relationship(name: 'classification', titleAttribute: 'classification_name'),
-                // SelectFilter::make('classification_id')
-                //     ->label('Services')
-                //     ->multiple()
-                //     ->searchable()
-                //     ->preload()
-                //     ->relationship(name: 'classification', titleAttribute: 'classification_name'),
-                // SelectFilter::make('Category_id')
-                //     ->label('Category')
-                //     ->multiple()
-                //     ->searchable()
-                //     ->preload()
-                //     ->relationship(name: 'category', titleAttribute: 'category_name'),
+            ])->defaultSort('created_at', 'desc')
+
+            ->searchPlaceholder('Search by Name / Services')
+
+            ->filters([
 
                 SelectFilter::make('type_company_id')
                     ->label('Category of Vendor')
@@ -245,23 +189,8 @@ class VendorResource extends Resource
                     // ->multiple()
                     ->searchable()
                     ->preload()
-                    // ->live()
-                    // ->afterStateUpdated(function (Set $set) {
-                    //     $set('city_id', null);
-                    // })
+
                     ->relationship(name: 'province', titleAttribute: 'province'),
-                // SelectFilter::make('city_id')
-                //     ->label('City')
-                //     // ->multiple()
-                //     ->searchable()
-                //     ->preload()
-                //     // ->live()
-                //     // ->afterStateUpdated(function (Set $set) {
-                //     //     $set('city_id', null);
-                //     // })
-                //     ->relationship(name: 'city', titleAttribute: 'city'),
-
-
 
             ])
             ->actions([
@@ -277,50 +206,16 @@ class VendorResource extends Resource
                         ->modalContent(Infolist::make())
                         ->modalAlignment('center'),
 
-                    // EditAction::make('edit'),
-                    // ForceDeleteAction::make('Delete'),
 
-                    // EditAction::make('edit'),
-                    // Action::make('delete'),
                 ])
-                // ->label('Details')
-                //     ->icon('heroicon-m-ellipsis-vertical')
-                // ->size(ActionSize::Small)
-                //     ->color('primary')
-                //     ->button(),
-                // Tables\Actions\ViewAction::make(),
-                // Tables\Actions\EditAction::make(),
+
             ])
             ->headerActions([
-                // ExportBulkAction::make()
-                //     ->exporter(VendorExporter::class)
+
 
             ])
             ->bulkActions([
-                // Tables\Actions\BulkActionGroup::make([
-                //     // Tables\Actions\DeleteBulkAction::make(),
-                //     Tables\Actions\ForceDeleteBulkAction::make(),
-                //     // Tables\Actions\RestoreBulkAction::make(),
-                //     // \pxlrbt\FilamentExcel\Actions\Tables\ExportAction::make()->exports([
-                //     //     \pxlrbt\FilamentExcel\Exports\ExcelExport::make()->withColumns([
 
-                //     //         \pxlrbt\FilamentExcel\Columns\Column::make('created_at'),
-                //     //         \pxlrbt\FilamentExcel\Columns\Column::make('deleted_at'),
-                //     //     ]),
-                //     // ]),
-
-                // ]),
-                // Tables\Actions\ExportBulkAction::make()
-                //     ->exporter(VendorExporter::class)
-                //     ->modalHeading('Export Vendors')
-                //     ->columnMapping(false)
-                //     ->formats([
-                //         ExportFormat::Xlsx,
-                //     ]),
-                // ExportAction::make()->exports([
-                //     ExcelExport::make('table')->fromTable(),
-                //     ExcelExport::make('form')->fromForm(),
-                // ])
             ]);
     }
 
@@ -391,7 +286,7 @@ class VendorResource extends Resource
                         TextEntry::make('description')
                             ->copyable()
                             ->copyMessage('Copied!')
-                            ->label('Description : Products / Services')
+                            ->label('Description : Goods / Services / Works')
                             ->html()
                             ->weight(FontWeight::Bold)
                             ->columnSpanFull(),
@@ -421,6 +316,7 @@ class VendorResource extends Resource
                             TextEntry::make('province.province')
                                 ->weight(FontWeight::Bold),
                             TextEntry::make('city.city')
+                                ->label('District')
                                 ->weight(FontWeight::Bold),
                             TextEntry::make('website')
                                 ->copyable()
@@ -447,7 +343,11 @@ class VendorResource extends Resource
                         ]),
 
 
-                        TextEntry::make('bank.bank_type')->weight(FontWeight::Bold),
+                        TextEntry::make('bank.bank_type')
+                            ->label('Type of Bank Account')
+                            ->copyable()
+                            ->copyMessage('Copied!')
+                            ->weight(FontWeight::Bold),
 
                         \Filament\Infolists\Components\Group::make()->schema([
                             IconEntry::make('tax_register')
